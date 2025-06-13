@@ -1,5 +1,6 @@
 import streamlit as st
 
 def input_tipo_via():
-    opciones = ["Deportiva", "Bloque", "Clásica", "Alpina", "Mixta", "Otro"]
-    return st.selectbox("Tipo de vía", opciones)
+    opciones = ["Boulder", "Cuerda"]
+    tipo = st.radio("Tipo de vía", opciones, horizontal=True)
+    return tipo
