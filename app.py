@@ -4,7 +4,7 @@ import os
 
 from campos.campo_escalador import input_escalador
 from campos.campo_nombre_via import input_nombre_via
-#from campos.campo_rocodromo import input_rocodromo
+from campos.campo_rocodromo import input_rocodromo
 from campos.campo_tipo_via import input_tipo_via
 from campos.campo_dificultad_oficial import input_dificultad_oficial
 from campos.campo_fecha import input_fecha
