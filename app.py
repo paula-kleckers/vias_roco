@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 
-#from campos.campo_escalador import input_escalador
+from campos.campo_escalador import input_escalador
 from campos.campo_nombre_via import input_nombre_via
 #from campos.campo_rocodromo import input_rocodromo
 from campos.campo_tipo_via import input_tipo_via
