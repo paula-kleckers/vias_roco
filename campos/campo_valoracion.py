@@ -1,4 +1,13 @@
 import streamlit as st
 
 def input_valoracion():
-    return st.slider("Valoración", 1, 5)
+    opciones = ["🔛 Calentamiento",
+                "🥱 Aburrida",
+                "☠ Criminal",
+                "😫 Muy mala",
+                "😕 Mala",
+                "😐 Media",
+                "😋 Buena",
+                "😁 Muy buena",
+                "🤪 Locura para bien"]
+    return st.selectbox("Valoración de la vía", opciones)
