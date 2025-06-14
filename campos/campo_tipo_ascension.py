@@ -1,5 +1,11 @@
 import streamlit as st
 
 def input_tipo_ascension():
-    opciones = ["Flash", "A vista", "Entrenamiento", "Trabajo", "Otro"]
+    opciones = ["👀 A vista",
+                "⚡ Flash",
+                "✅ Completada",
+                "❌ Intentada",
+                "🪢 Top rope",
+                "📚 Proyecto",
+                "🗑 Eliminada"]
     return st.selectbox("Tipo de ascensión", opciones)
