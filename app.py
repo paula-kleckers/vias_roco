@@ -43,7 +43,7 @@ with st.sidebar:
     tipo_via = input_tipo_via(rocodromo)
     dificultad_oficial, opciones_dificultad = input_dificultad_oficial(rocodromo, tipo_via)
     tipo_ascension = input_tipo_ascension()
-    intentos = input_intentos()
+    intentos = input_intentos(tipo_ascension)
     dificultad_percibida = input_dificultad_percibida(dificultad_oficial, opciones_dificultad)
     valoracion = input_valoracion()
     st.markdown("---")
