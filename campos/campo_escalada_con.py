@@ -42,7 +42,7 @@ def escalada_con_existentes(df, escalador_seleccionado):
 
 def escalada_con_nuevos():
     if "companeros" not in st.session_state:
-        st.session_state.companeros = [""]
+        st.session_state.companeros = []
 
     st.write("Añadir compañeros de escalada nuevos:")
 

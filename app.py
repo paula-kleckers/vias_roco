@@ -33,6 +33,9 @@ else:
 
 # ---------- FORMULARIO ----------
 with st.sidebar:
+    # Botón para reiniciar el formulario
+    if st.button("🔄 Resetear formulario"):
+        st.session_state.clear()
     # Se agregan registros fuera de un formulario para garantizar que son dinámicos
     st.header("Agregar nuevo registro")
     escalador = input_escalador(df)
@@ -78,10 +81,6 @@ with st.sidebar:
         df = pd.concat([df, pd.DataFrame([nuevo_registro])], ignore_index=True)
         df.to_csv(DATA_FILE, index=False)
         st.success("Registro guardado correctamente")
-
-        # Resetear cajas
-        st.session_state.companeros = [""]    # Resetea el número de cajas de nuevos compañeros de escalada
-
 
 # st.header("📋 Datos recogidos")
 # st.dataframe(df, use_container_width=True)
