@@ -15,6 +15,7 @@ from campos.campo_valoracion import input_valoracion
 from campos.campo_escalada_con import input_escalada_con
 from campos.campo_comentarios_personales import input_comentarios_personales
 from campos.campo_comentarios_tipo_ascension import input_comentarios_tipo_ascension
+from campos.campo_foto import input_foto
 
 
 # ---------- CONFIGURACIÓN INICIAL ----------
@@ -47,6 +48,7 @@ with st.sidebar:
     escalada_con = input_escalada_con()
     comentarios_personales = input_comentarios_personales()
     comentarios_tipo_ascension = input_comentarios_tipo_ascension()
+    ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"))
 
     # Se genera el formulario para poder utilizar el botón de guardado
     with st.form(key="formulario_usuario"):
@@ -66,7 +68,8 @@ with st.sidebar:
             "Valoración": valoracion,
             "Escalada con...": escalada_con,
             "Comentarios (personales)": comentarios_personales,
-            "Comentarios (tipo de ascensión)": comentarios_tipo_ascension
+            "Comentarios (tipo de ascensión)": comentarios_tipo_ascension,
+            "Ruta imagen": ruta_foto
         }
         df = pd.concat([df, pd.DataFrame([nuevo_registro])], ignore_index=True)
         df.to_csv(DATA_FILE, index=False)
