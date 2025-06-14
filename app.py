@@ -35,7 +35,7 @@ else:
 with st.sidebar:
     # Se agregan registros fuera de un formulario para garantizar que son dinámicos
     st.header("Agregar nuevo registro")
-    escalador = input_escalador()
+    escalador = input_escalador(df)
     rocodromo = input_rocodromo()
     tipo_via = input_tipo_via(rocodromo)
     dificultad_oficial, opciones_dificultad = input_dificultad_oficial(rocodromo, tipo_via)
