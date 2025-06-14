@@ -18,7 +18,7 @@ from campos.campo_comentarios_tipo_ascension import input_comentarios_tipo_ascen
 
 
 # ---------- CONFIGURACIÓN INICIAL ----------
-st.set_page_config(page_title="Formulario y Análisis", layout="wide")
+st.set_page_config(page_title="Roco Climber", layout="wide")
 
 DATA_FILE = "data.csv"
 
@@ -70,8 +70,8 @@ with st.sidebar:
         df.to_csv(DATA_FILE, index=False)
         st.success("Registro guardado correctamente")
 
-st.header("📋 Datos recogidos")
-st.dataframe(df, use_container_width=True)
+# st.header("📋 Datos recogidos")
+# st.dataframe(df, use_container_width=True)
 
 # ---------- PESTAÑAS ----------
 tab1, tab2 = st.tabs(["📋 Tabla de datos", "📊 Gráficos"])
