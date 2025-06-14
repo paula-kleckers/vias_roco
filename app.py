@@ -95,8 +95,6 @@ with st.sidebar:
             del st.session_state["registro_seleccionado"]
         st.success("Registro guardado correctamente")
 
-# st.header("📋 Datos recogidos")
-# st.dataframe(df, use_container_width=True)
 
 # ---------- PESTAÑAS ----------
 tab1, tab2 = st.tabs(["📋 Tabla de datos", "📊 Gráficos"])
