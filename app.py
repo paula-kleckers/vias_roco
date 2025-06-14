@@ -32,29 +32,31 @@ else:
 
 # ---------- FORMULARIO ----------
 with st.sidebar:
+    # Se agregan registros fuera de un formulario para garantizar que son dinámicos
     st.header("Agregar nuevo registro")
-    with st.form(key="formulario_usuario"):
-        escalador = input_escalador()
-        nombre_via = input_nombre_via()
-        rocódromo = input_rocodromo()
-        tipo_via = input_tipo_via()
-        dificultad_oficial = input_dificultad_oficial()
-        fecha = input_fecha()
-        tipo_ascension = input_tipo_ascension()
-        intentos = input_intentos()
-        dificultad_percibida = input_dificultad_percibida()
-        valoracion = input_valoracion()
-        escalada_con = input_escalada_con()
-        comentarios_personales = input_comentarios_personales()
-        comentarios_tipo_ascension = input_comentarios_tipo_ascension()
+    escalador = input_escalador()
+    nombre_via = input_nombre_via()
+    rocodromo = input_rocodromo()
+    tipo_via = input_tipo_via(rocodromo)
+    dificultad_oficial = input_dificultad_oficial(rocodromo, tipo_via)
+    fecha = input_fecha()
+    tipo_ascension = input_tipo_ascension()
+    intentos = input_intentos()
+    dificultad_percibida = input_dificultad_percibida()
+    valoracion = input_valoracion()
+    escalada_con = input_escalada_con()
+    comentarios_personales = input_comentarios_personales()
+    comentarios_tipo_ascension = input_comentarios_tipo_ascension()
 
+    # Se genera el formulario para poder utilizar el botón de guardado
+    with st.form(key="formulario_usuario"):
         submit_button = st.form_submit_button("Guardar")
 
     if submit_button:
         nuevo_registro = {
             "Escalador": escalador,
             "Nombre vía": nombre_via,
-            "Rocódromo": rocódromo,
+            "Rocódromo": rocodromo,
             "Tipo de vía": tipo_via,
             "Dificultad oficial": dificultad_oficial,
             "Fecha": fecha,
