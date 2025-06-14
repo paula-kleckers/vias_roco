@@ -36,18 +36,22 @@ with st.sidebar:
     # Se agregan registros fuera de un formulario para garantizar que son dinámicos
     st.header("Agregar nuevo registro")
     escalador = input_escalador(df)
+    escalada_con = input_escalada_con(df, escalador)
+    st.markdown("---")
+    fecha = input_fecha()
     rocodromo = input_rocodromo()
     tipo_via = input_tipo_via(rocodromo)
     dificultad_oficial, opciones_dificultad = input_dificultad_oficial(rocodromo, tipo_via)
-    fecha = input_fecha()
     tipo_ascension = input_tipo_ascension()
     intentos = input_intentos()
     dificultad_percibida = input_dificultad_percibida(dificultad_oficial, opciones_dificultad)
     valoracion = input_valoracion()
-    escalada_con = input_escalada_con(df, escalador)
+    st.markdown("---")
     comentarios_personales = input_comentarios_personales()
     comentarios_tipo_ascension = input_comentarios_tipo_ascension()
+    st.markdown("---")
     nombre_via = input_nombre_via(df, rocodromo)
+    st.markdown("---")
     ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"))
 
     # Se genera el formulario para poder utilizar el botón de guardado
@@ -57,15 +61,15 @@ with st.sidebar:
     if submit_button:
         nuevo_registro = {
             "Escalador": escalador,
+            "Escalada con...": escalada_con,
+            "Fecha": fecha,
             "Rocódromo": rocodromo,
             "Tipo de vía": tipo_via,
             "Dificultad oficial": dificultad_oficial,
-            "Fecha": fecha,
             "Tipo de ascensión": tipo_ascension,
             "Intentos (en la fecha)": intentos,
             "Dificultad percibida": dificultad_percibida,
             "Valoración": valoracion,
-            "Escalada con...": escalada_con,
             "Comentarios (personales)": comentarios_personales,
             "Comentarios (tipo de ascensión)": comentarios_tipo_ascension,
             "Nombre vía": nombre_via,
