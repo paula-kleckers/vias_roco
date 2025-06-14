@@ -11,4 +11,5 @@ def input_valoracion():
                 "😋 Buena",
                 "😁 Muy buena",
                 "🤪 Locura para bien"]
-    return st.selectbox("Valoración de la vía", opciones)
+    return st.selectbox("Valoración de la vía", opciones,
+                        help="Selecciona tu valoración de la vía")

@@ -14,7 +14,10 @@ def input_escalador(df):
             df["Escalador"].dropna().astype(str).unique().tolist()
         )
         escaladores_existentes = sorted(escaladores_existentes)
+        escaladores_existentes = [""] + escaladores_existentes
 
-        nombre = st.selectbox("Selecciona un escalador", escaladores_existentes)
+        nombre = st.selectbox("Selecciona un escalador", escaladores_existentes,
+                              help="Selecciona un escalador registrado. Si no está, selecciona Nuevo escalador e "
+                                   "introduce el nombre")
 
     return nombre.strip()
