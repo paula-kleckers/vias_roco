@@ -1,7 +1,8 @@
 import streamlit as st
 
 def input_valoracion():
-    opciones = ["🔛 Calentamiento",
+    opciones = ["",
+                "🔛 Calentamiento",
                 "🥱 Aburrida",
                 "☠ Criminal",
                 "😫 Muy mala",

@@ -1,7 +1,8 @@
 import streamlit as st
 
 def input_tipo_ascension():
-    opciones = ["👀 A vista",
+    opciones = ["",
+                "👀 A vista",
                 "⚡ Flash",
                 "✅ Completada",
                 "❌ Intentada",
