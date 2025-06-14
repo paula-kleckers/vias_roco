@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 
+from campos.campo_indice import input_indice
 from campos.campo_escalador import input_escalador
 from campos.campo_nombre_via import input_nombre_via
 from campos.campo_rocodromo import input_rocodromo
@@ -36,8 +37,13 @@ with st.sidebar:
     # Botón para reiniciar el formulario
     if st.button("🔄 Resetear formulario"):
         st.session_state.clear()
+
+    st.header("Índice de fila para el registro")
+    indice = input_indice(df)
+    st.markdown("---")
+
     # Se agregan registros fuera de un formulario para garantizar que son dinámicos
-    st.header("Agregar nuevo registro")
+    st.header("Agregar registro")
     escalador = input_escalador(df)
     escalada_con = input_escalada_con(df, escalador)
     st.markdown("---")
@@ -78,8 +84,15 @@ with st.sidebar:
             "Nombre vía": nombre_via,
             "Ruta imagen": ruta_foto
         }
-        df = pd.concat([df, pd.DataFrame([nuevo_registro])], ignore_index=True)
+
+        if len(df) > 0 and indice < len(df):
+            df.loc[indice] = nuevo_registro
+        else:
+            df = pd.concat([df, pd.DataFrame([nuevo_registro])], ignore_index=True)
+
         df.to_csv(DATA_FILE, index=False)
+        if "registro_seleccionado" in st.session_state:
+            del st.session_state["registro_seleccionado"]
         st.success("Registro guardado correctamente")
 
 # st.header("📋 Datos recogidos")
