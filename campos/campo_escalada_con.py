@@ -41,27 +41,36 @@ def escalada_con_existentes(df, escalador_seleccionado):
 
 
 def escalada_con_nuevos():
-    # Si los compañeros no están en la lista, se añaden como cajas de texto
-
     if "companeros" not in st.session_state:
         st.session_state.companeros = [""]
 
-    st.text("Añadir compañeros de escalada nuevos: ")
+    st.write("Añadir compañeros de escalada nuevos:")
 
-    # Mostrar cajas para cada compañero
-    for i in range(1, len(st.session_state.companeros)):
-        st.session_state.companeros[i] = st.text_input(
-            f"Compañero #{i}",
-            value=st.session_state.companeros[i],
-            key=f"comp_{i}"
-        )
+    for i in range(len(st.session_state.companeros)):
+        cols = st.columns([4,1])
+        with cols[0]:
+            st.session_state.companeros[i] = st.text_input(
+                f"Compañero #{i+1}",
+                value=st.session_state.companeros[i],
+                key=f"comp_{i}"
+            )
+        with cols[1]:
+            st.button(
+                "🗑️",
+                key=f"del_{i}",
+                on_click=borrar_companero,
+                args=(i,)
+            )
 
-    st.button("Añadir compañero", on_click=agregar_caja)
+    st.button("Añadir compañero", on_click=anadir_companero)
 
-    # Limpiar nombres vacíos o solo espacios
+    # Filtrar nombres vacíos o solo espacios
     escalada_con_nuevos_filtrado = [c.strip() for c in st.session_state.companeros if c.strip() != ""]
 
     return escalada_con_nuevos_filtrado
 
-def agregar_caja():
+def borrar_companero(indice):
+    st.session_state.companeros.pop(indice)
+
+def anadir_companero():
     st.session_state.companeros.append("")
