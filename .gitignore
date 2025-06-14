@@ -1,5 +1,4 @@
 __pycache__/
 .venv/
 .idea/
-
-client_id.txt
+client_id
