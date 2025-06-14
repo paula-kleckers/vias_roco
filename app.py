@@ -23,6 +23,7 @@ from campos.campo_foto import input_foto
 st.set_page_config(page_title="Roco Climber", layout="wide")
 
 DATA_FILE = "data.csv"
+CLIENT_ID = pd.read_csv("client_id.txt")
 
 # Cargar datos si existen
 if os.path.exists(DATA_FILE):

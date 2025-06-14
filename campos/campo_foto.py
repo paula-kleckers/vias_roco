@@ -1,37 +1,35 @@
 import streamlit as st
-import os
-from datetime import datetime
-from PIL import Image
+import requests
 
+def subir_a_imgur(imagen_file, client_id):
+    headers = {"Authorization": f"Client-ID {client_id}"}
+    url = "https://api.imgur.com/3/image"
 
-def input_foto(nombre_escalador: str, fecha: str):
+    imagen_bytes = imagen_file.read()
+    data = {
+        'image': imagen_bytes,
+        'type': 'file'
+    }
+
+    response = requests.post(url, headers=headers, files={'image': imagen_bytes})
+    if response.status_code == 200:
+        link = response.json()['data']['link']
+        return link
+    else:
+        st.error(f"Error subiendo imagen a Imgur: {response.status_code}")
+        return None
+
+def input_foto(nombre_escalador: str, fecha: str, client_id: str):
     st.subheader("Foto de la vía (opcional)")
 
     imagen = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"], key="foto")
 
     if imagen:
-        # Crear carpeta si no existe
-        carpeta = "uploads"
-        os.makedirs(carpeta, exist_ok=True)
-
-        # Generar nombre de archivo único
-        base_name = f"{nombre_escalador}_{fecha}".replace(" ", "_").replace("/", "-")
-        existing = [
-            f for f in os.listdir(carpeta)
-            if f.startswith(base_name)
-        ]
-        indice = len(existing) + 1  # siguiente índice
-        extension = imagen.name.split(".")[-1]
-        filename = f"{base_name}.{extension}"
-        ruta_completa = os.path.join(carpeta, filename)
-
-        # Guardar imagen en disco
-        with open(ruta_completa, "wb") as f:
-            f.write(imagen.getbuffer())
-
-        # Mostrar imagen
-        st.image(ruta_completa, caption="Imagen subida", use_container_width=True)
-
-        return ruta_completa  # Ruta que puedes guardar en el DataFrame
-
-    return ""  # Si no se sube imagen, devuelve cadena vacía
+        url_imgur = subir_a_imgur(imagen, client_id)
+        if url_imgur:
+            st.image(url_imgur, caption="Imagen subida a Imgur", use_container_width=True)
+            html_img = f'<img src="{url_imgur}" width="100"/>'
+            return html_img
+        else:
+            return ""
+    return ""
