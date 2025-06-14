@@ -4,7 +4,7 @@ def input_escalador(df):
     st.header("Escalador")
 
     # Checkbox para elegir si es nuevo o no
-    es_nuevo = st.checkbox("¿Nuevo escalador?", value=False)
+    es_nuevo = st.checkbox("Nuevo escalador", value=False)
 
     if es_nuevo:
         nombre = st.text_input("Introduce el nombre del nuevo escalador")
