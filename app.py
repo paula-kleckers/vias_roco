@@ -45,7 +45,7 @@ with st.sidebar:
     intentos = input_intentos()
     dificultad_percibida = input_dificultad_percibida(dificultad_oficial, opciones_dificultad)
     valoracion = input_valoracion()
-    escalada_con = input_escalada_con()
+    escalada_con = input_escalada_con(df, escalador)
     comentarios_personales = input_comentarios_personales()
     comentarios_tipo_ascension = input_comentarios_tipo_ascension()
     ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"))
@@ -74,6 +74,10 @@ with st.sidebar:
         df = pd.concat([df, pd.DataFrame([nuevo_registro])], ignore_index=True)
         df.to_csv(DATA_FILE, index=False)
         st.success("Registro guardado correctamente")
+
+        # Resetear cajas
+        st.session_state.companeros = [""]    # Resetea el número de cajas de nuevos compañeros de escalada
+
 
 # st.header("📋 Datos recogidos")
 # st.dataframe(df, use_container_width=True)
