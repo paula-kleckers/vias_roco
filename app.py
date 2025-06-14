@@ -35,8 +35,7 @@ else:
 with st.sidebar:
     # Se agregan registros fuera de un formulario para garantizar que son dinámicos
     st.header("Agregar nuevo registro")
-    escalador = input_escalador()
-    nombre_via = input_nombre_via()
+    escalador = input_escalador(df)
     rocodromo = input_rocodromo()
     tipo_via = input_tipo_via(rocodromo)
     dificultad_oficial, opciones_dificultad = input_dificultad_oficial(rocodromo, tipo_via)
@@ -48,6 +47,7 @@ with st.sidebar:
     escalada_con = input_escalada_con(df, escalador)
     comentarios_personales = input_comentarios_personales()
     comentarios_tipo_ascension = input_comentarios_tipo_ascension()
+    nombre_via = input_nombre_via(df, rocodromo)
     ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"))
 
     # Se genera el formulario para poder utilizar el botón de guardado
@@ -57,7 +57,6 @@ with st.sidebar:
     if submit_button:
         nuevo_registro = {
             "Escalador": escalador,
-            "Nombre vía": nombre_via,
             "Rocódromo": rocodromo,
             "Tipo de vía": tipo_via,
             "Dificultad oficial": dificultad_oficial,
@@ -69,6 +68,7 @@ with st.sidebar:
             "Escalada con...": escalada_con,
             "Comentarios (personales)": comentarios_personales,
             "Comentarios (tipo de ascensión)": comentarios_tipo_ascension,
+            "Nombre vía": nombre_via,
             "Ruta imagen": ruta_foto
         }
         df = pd.concat([df, pd.DataFrame([nuevo_registro])], ignore_index=True)
