@@ -23,7 +23,9 @@ from campos.campo_foto import input_foto
 st.set_page_config(page_title="Roco Climber", layout="wide")
 
 DATA_FILE = "data.csv"
-CLIENT_ID = pd.read_csv("client_id/client_id.txt")
+with open("client_id/client_id.txt", "r") as f:
+    CLIENT_ID = f.read().strip()
+print(f"Client ID: {CLIENT_ID}")
 
 # Cargar datos si existen
 if os.path.exists(DATA_FILE):
@@ -62,7 +64,7 @@ with st.sidebar:
     st.markdown("---")
     nombre_via = input_nombre_via(df, rocodromo)
     st.markdown("---")
-    ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"))
+    ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"), CLIENT_ID)
 
     # Se genera el formulario para poder utilizar el botón de guardado
     with st.form(key="formulario_usuario"):
@@ -95,7 +97,6 @@ with st.sidebar:
         if "registro_seleccionado" in st.session_state:
             del st.session_state["registro_seleccionado"]
         st.success("Registro guardado correctamente")
-
 
 # ---------- PESTAÑAS ----------
 tab1, tab2 = st.tabs(["📋 Tabla de datos", "📊 Gráficos"])

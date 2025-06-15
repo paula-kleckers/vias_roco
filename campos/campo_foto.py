@@ -28,8 +28,7 @@ def input_foto(nombre_escalador: str, fecha: str, client_id: str):
         url_imgur = subir_a_imgur(imagen, client_id)
         if url_imgur:
             st.image(url_imgur, caption="Imagen subida a Imgur", use_container_width=True)
-            html_img = f'<img src="{url_imgur}" width="100"/>'
-            return html_img
+            return url_imgur
         else:
             return ""
     return ""
