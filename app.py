@@ -98,6 +98,20 @@ with st.sidebar:
             del st.session_state["registro_seleccionado"]
         st.success("Registro guardado correctamente")
 
+    st.markdown("---")
+    st.subheader("🗑️ Eliminar registro")
+
+    if not df.empty:
+        fila_a_borrar = st.number_input("Selecciona el número de fila a borrar", min_value=0, max_value=len(df) - 1,
+                                        step=1)
+
+        if st.button("Borrar fila"):
+            df = df.drop(index=fila_a_borrar).reset_index(drop=True)
+            df.to_csv(DATA_FILE, index=False)
+            st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
+    else:
+        st.info("No hay datos para eliminar.")
+
 # ---------- PESTAÑAS ----------
 tab1, tab2 = st.tabs(["📋 Tabla de datos", "📊 Gráficos"])
 
