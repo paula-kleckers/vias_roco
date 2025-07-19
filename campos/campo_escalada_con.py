@@ -14,18 +14,21 @@ def escalada_con_existentes(df, escalador_seleccionado):
     st.header("Escalada con...")
 
     # Extraer sugerencias como antes, desde el DataFrame actual
-    escaladores = df["Escalador"].dropna().unique().tolist()
+    escaladores = df["escalador"].dropna().unique().tolist() if "escalador" in df.columns else []
 
-    escalada_con_existentes = (
-        df["Escalada con..."]
-        .dropna()
-        .astype(str)
-        .str.split(",")
-        .explode()
-        .str.strip()
-        .unique()
-        .tolist()
-    )
+    if "escalada_con" in df.columns and df["escalada_con"].notna().any():
+        escalada_con_existentes = (
+            df["escalada_con"]
+            .dropna()
+            .astype(str)
+            .str.split(",")
+            .explode()
+            .str.strip()
+            .unique()
+            .tolist()
+        )
+    else:
+        escalada_con_existentes = []
 
     listado = sorted(set(escaladores + escalada_con_existentes))
     listado = [nombre for nombre in listado if nombre != escalador_seleccionado]

@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+from supabase import create_client, Client
 
 from campos.campo_indice import input_indice
 from campos.campo_escalador import input_escalador
@@ -22,18 +23,35 @@ from campos.campo_foto import input_foto
 # ---------- CONFIGURACIÓN INICIAL ----------
 st.set_page_config(page_title="Roco Climber", layout="wide")
 
-DATA_FILE = "data.csv"
+#DATA_FILE = "data.csv"
+
+# Tus credenciales de Supabase
+url = "https://ubnslrintcfolygbnqsb.supabase.co"
+key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVibnNscmludGNmb2x5Z2JucXNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjIwNTAsImV4cCI6MjA2ODQ5ODA1MH0.Pzkl20vGMdDCV48HJCa7nj2CUgCmk7qNJWjWdzOSYNQ"
+supabase: Client = create_client(url, key)
+
 with open("client_id/client_id.txt", "r") as f:
     CLIENT_ID = f.read().strip()
 print(f"Client ID: {CLIENT_ID}")
 
 # Cargar datos si existen
-if os.path.exists(DATA_FILE):
-    df = pd.read_csv(DATA_FILE)
-else:
-    df = pd.DataFrame(columns=["Escalador", "Nombre vía", "Rocódromo", "Tipo de vía", "Dificultad oficial", "Fecha",
-                               "Tipo de ascensión", "Intentos (en la fecha)", "Dificultad percibida", "Valoración",
-                               "Escalada con...", "Comentarios (personales)", "Comentarios (tipo de ascensión)"])
+try:
+    response = supabase.table("climbing_data").select("*").execute()
+    df = pd.DataFrame(response.data)
+except Exception as e:
+    st.error("Error al cargar los datos desde Supabase")
+    df = pd.DataFrame(columns=[
+        "escalador", "escalada_con", "fecha", "rocodromo", "tipo_via", "dificultad_oficial",
+        "tipo_ascension", "intentos", "dificultad_percibida", "valoracion",
+        "comentarios_personales", "comentarios_tipo_ascension", "nombre_via", "ruta_imagen"
+    ])
+
+# if os.path.exists(DATA_FILE):
+#     df = pd.read_csv(DATA_FILE)
+# else:
+#     df = pd.DataFrame(columns=["Escalador", "Nombre vía", "Rocódromo", "Tipo de vía", "Dificultad oficial", "Fecha",
+#                                "Tipo de ascensión", "Intentos (en la fecha)", "Dificultad percibida", "Valoración",
+#                                "Escalada con...", "Comentarios (personales)", "Comentarios (tipo de ascensión)"])
 
 # ---------- FORMULARIO ----------
 with st.sidebar:
@@ -72,20 +90,20 @@ with st.sidebar:
 
     if submit_button:
         nuevo_registro = {
-            "Escalador": escalador,
-            "Escalada con...": escalada_con,
-            "Fecha": fecha,
-            "Rocódromo": rocodromo,
-            "Tipo de vía": tipo_via,
-            "Dificultad oficial": dificultad_oficial,
-            "Tipo de ascensión": tipo_ascension,
-            "Intentos (en la fecha)": intentos,
-            "Dificultad percibida": dificultad_percibida,
-            "Valoración": valoracion,
-            "Comentarios (personales)": comentarios_personales,
-            "Comentarios (tipo de ascensión)": comentarios_tipo_ascension,
-            "Nombre vía": nombre_via,
-            "Ruta imagen": ruta_foto
+            "escalador": escalador,
+            "escalada_con": escalada_con,
+            "fecha": fecha.strftime("%Y-%m-%d"),
+            "rocodromo": rocodromo,
+            "tipo_via": tipo_via,
+            "dificultad_oficial": dificultad_oficial,
+            "tipo_ascension": tipo_ascension,
+            "intentos": intentos,
+            "dificultad_percibida": dificultad_percibida,
+            "valoracion": valoracion,
+            "comentarios_personales": comentarios_personales,
+            "comentarios_tipo_ascension": comentarios_tipo_ascension,
+            "nombre_via": nombre_via,
+            "ruta_imagen": ruta_foto
         }
 
         if len(df) > 0 and indice < len(df):
@@ -93,7 +111,9 @@ with st.sidebar:
         else:
             df = pd.concat([df, pd.DataFrame([nuevo_registro])], ignore_index=True)
 
-        df.to_csv(DATA_FILE, index=False)
+        #df.to_csv(DATA_FILE, index=False)
+        supabase.table("climbing_data").upsert(nuevo_registro).execute()
+
         if "registro_seleccionado" in st.session_state:
             del st.session_state["registro_seleccionado"]
         st.success("Registro guardado correctamente")
@@ -106,9 +126,13 @@ with st.sidebar:
                                         step=1)
 
         if st.button("Borrar fila"):
-            df = df.drop(index=fila_a_borrar).reset_index(drop=True)
-            df.to_csv(DATA_FILE, index=False)
-            st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
+            # df = df.drop(index=fila_a_borrar).reset_index(drop=True)
+            # df.to_csv(DATA_FILE, index=False)
+            # st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
+            id_a_borrar = df.iloc[fila_a_borrar]["id"]
+            supabase.table("climbing_data").delete().eq("id", id_a_borrar).execute()
+            st.success(f"Registro con ID {id_a_borrar} eliminado correctamente.")
+
     else:
         st.info("No hay datos para eliminar.")
 

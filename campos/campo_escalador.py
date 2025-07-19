@@ -11,7 +11,7 @@ def input_escalador(df):
     else:
         # Lista de escaladores registrados
         escaladores_existentes = (
-            df["Escalador"].dropna().astype(str).unique().tolist()
+            df["escalador"].dropna().astype(str).unique().tolist()
         )
         escaladores_existentes = sorted(escaladores_existentes)
         escaladores_existentes = [""] + escaladores_existentes
