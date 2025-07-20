@@ -19,7 +19,7 @@ from campos.campo_comentarios_personales import input_comentarios_personales
 from campos.campo_comentarios_tipo_ascension import input_comentarios_tipo_ascension
 from campos.campo_foto import input_foto
 
-#from charts.grafico_dificultad_por_escalador import dificultad_por_escalador
+from charts.grafico_dificultad_por_escalador import dificultad_por_escalador
 
 
 # ---------- CONFIGURACIÓN INICIAL ----------
