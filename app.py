@@ -19,6 +19,8 @@ from campos.campo_comentarios_personales import input_comentarios_personales
 from campos.campo_comentarios_tipo_ascension import input_comentarios_tipo_ascension
 from campos.campo_foto import input_foto
 
+#from charts.grafico_dificultad_por_escalador import dificultad_por_escalador
+
 
 # ---------- CONFIGURACIÓN INICIAL ----------
 st.set_page_config(page_title="Roco Climber", layout="wide")
@@ -129,8 +131,8 @@ with st.sidebar:
             # df = df.drop(index=fila_a_borrar).reset_index(drop=True)
             # df.to_csv(DATA_FILE, index=False)
             # st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
-            id_a_borrar = df.iloc[fila_a_borrar]["id"]
-            supabase.table("climbing_data").delete().eq("id", id_a_borrar).execute()
+            id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
+            supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
             st.success(f"Registro con ID {id_a_borrar} eliminado correctamente.")
 
     else:
@@ -143,13 +145,12 @@ with tab1:
     st.header("📋 Datos recogidos")
     st.dataframe(df, use_container_width=True)
 
-# with tab2:
-#     st.header("📊 Visualización de datos")
-#     col1, col2 = st.columns(2)
-#
-#     with col1:
-#         st.subheader("Distribución por edad")
-#         st.bar_chart(df["Edad"].value_counts().sort_index())
+with tab2:
+    st.header("📊 Visualización de datos")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        dificultad_por_escalador(df)
 #
 #     with col2:
 #         st.subheader("Nivel de satisfacción")
