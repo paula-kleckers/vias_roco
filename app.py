@@ -34,7 +34,6 @@ supabase: Client = create_client(url, key)
 
 with open("client_id/client_id.txt", "r") as f:
     CLIENT_ID = f.read().strip()
-print(f"Client ID: {CLIENT_ID}")
 
 # Cargar datos si existen
 try:
@@ -145,12 +144,12 @@ with tab1:
     st.header("📋 Datos recogidos")
     st.dataframe(df, use_container_width=True)
 
-with tab2:
-    st.header("📊 Visualización de datos")
-    col1, col2 = st.columns(2)
+# with tab2:
+#     st.header("📊 Visualización de datos")
+#     col1, col2 = st.columns(2)
 
-    with col1:
-        dificultad_por_escalador(df)
+    # with col1:
+    #     dificultad_por_escalador(df)
 #
 #     with col2:
 #         st.subheader("Nivel de satisfacción")
