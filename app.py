@@ -132,7 +132,7 @@ with st.sidebar:
             # st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
             id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
             supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
-            st.success(f"Registro con ID {id_a_borrar} eliminado correctamente.")
+            st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
 
     else:
         st.info("No hay datos para eliminar.")
@@ -144,12 +144,12 @@ with tab1:
     st.header("📋 Datos recogidos")
     st.dataframe(df, use_container_width=True)
 
-# with tab2:
-#     st.header("📊 Visualización de datos")
-#     col1, col2 = st.columns(2)
+with tab2:
+    st.header("📊 Visualización de datos")
+    col1, col2 = st.columns(2)
 
-    # with col1:
-    #     dificultad_por_escalador(df)
+    with col1:
+        dificultad_por_escalador(df)
 #
 #     with col2:
 #         st.subheader("Nivel de satisfacción")
