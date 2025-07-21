@@ -3,7 +3,7 @@ opciones = {
     "OneMove": {
         "": [""],
         "Boulder": ["", "Turquesa", "🟩 Verde", "🟨 Amarilla", "⬜ Blanca", "🟦 Azul", "🟥 Roja", "⬛ Negra"],
-        "Cuerda": ["", "Turquesa", "🟩 Verde", "🟨 Amarilla", "⬜ Blanca", "🟦 Azul", "🟥 Roja", "⬛ Negra"],
+        "Cuerda": ["", "🟩 Verde", "🟨 Amarilla", "🟥 Roja", "⬛ Negra"],
     },
     "Climbat": {
         "": [""],
