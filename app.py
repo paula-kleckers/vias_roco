@@ -20,6 +20,7 @@ from campos.campo_comentarios_tipo_ascension import input_comentarios_tipo_ascen
 from campos.campo_foto import input_foto
 
 from charts.chart_dificultad_escalada import n_vias_escaladas_por_dificultad_y_escalador
+from charts.chart_evolucion_dificultad_tiempo import evolucion_dificultad_escalada_tiempo
 
 
 # ---------- CONFIGURACIÓN INICIAL ----------
@@ -139,7 +140,7 @@ with st.sidebar:
         st.info("No hay datos para eliminar.")
 
 # ---------- PESTAÑAS ----------
-tab1, tab2 = st.tabs(["📋 Tabla de datos", "📊 Gráficos"])
+tab1, tab2, tab3 = st.tabs(["📋 Tabla de datos", "📊 Gráficos", "📈 Evolución grado"])
 
 with tab1:
     st.header("📋 Datos recogidos")
@@ -151,7 +152,12 @@ with tab2:
 
     with col1:
         n_vias_escaladas_por_dificultad_y_escalador(df)
-#
-#     with col2:
-#         st.subheader("Nivel de satisfacción")
-#         st.bar_chart(df["Satisfacción"].value_counts().sort_index())
+
+    # with col2:
+    #     st.subheader("Nivel de satisfacción")
+    #     st.bar_chart(df["Satisfacción"].value_counts().sort_index())
+
+with tab3:
+    st.subheader("📈 Evolución del grado de escalada a lo largo del tiempo")
+
+    evolucion_dificultad_escalada_tiempo(df)
