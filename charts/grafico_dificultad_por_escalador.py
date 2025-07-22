@@ -1,6 +1,7 @@
 import plotly.express as px
 import streamlit as st
 
+
 def dificultad_por_escalador(df):
     st.subheader("📈 Vías por dificultad (Plotly)")
 
@@ -16,7 +17,7 @@ def dificultad_por_escalador(df):
         (df["escalador"] == escalador_sel) &
         (df["rocodromo"] == rocodromo_sel) &
         (df["tipo_via"] == tipo_via_sel)
-    ]
+        ]
 
     if df_filtrado.empty:
         st.warning("No hay datos para esta combinación.")
