@@ -29,7 +29,8 @@ st.set_page_config(page_title="Roco Climber", layout="wide")
 
 # Tus credenciales de Supabase
 url = "https://ubnslrintcfolygbnqsb.supabase.co"
-key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVibnNscmludGNmb2x5Z2JucXNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjIwNTAsImV4cCI6MjA2ODQ5ODA1MH0.Pzkl20vGMdDCV48HJCa7nj2CUgCmk7qNJWjWdzOSYNQ"
+with open("client_id/supabase_key.txt", "r") as f:
+    key = f.read().strip()
 supabase: Client = create_client(url, key)
 
 with open("client_id/client_id.txt", "r") as f:
