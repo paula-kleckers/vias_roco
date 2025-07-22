@@ -48,12 +48,6 @@ except Exception as e:
         "comentarios_personales", "comentarios_tipo_ascension", "nombre_via", "ruta_imagen"
     ])
 
-# if os.path.exists(DATA_FILE):
-#     df = pd.read_csv(DATA_FILE)
-# else:
-#     df = pd.DataFrame(columns=["Escalador", "Nombre vía", "Rocódromo", "Tipo de vía", "Dificultad oficial", "Fecha",
-#                                "Tipo de ascensión", "Intentos (en la fecha)", "Dificultad percibida", "Valoración",
-#                                "Escalada con...", "Comentarios (personales)", "Comentarios (tipo de ascensión)"])
 
 # ---------- FORMULARIO ----------
 with st.sidebar:
@@ -113,7 +107,6 @@ with st.sidebar:
         else:
             df = pd.concat([df, pd.DataFrame([nuevo_registro])], ignore_index=True)
 
-        #df.to_csv(DATA_FILE, index=False)
         supabase.table("climbing_data").upsert(nuevo_registro).execute()
 
         if "registro_seleccionado" in st.session_state:
@@ -128,9 +121,6 @@ with st.sidebar:
                                         step=1)
 
         if st.button("Borrar fila"):
-            # df = df.drop(index=fila_a_borrar).reset_index(drop=True)
-            # df.to_csv(DATA_FILE, index=False)
-            # st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
             id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
             supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
             st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
@@ -139,24 +129,13 @@ with st.sidebar:
         st.info("No hay datos para eliminar.")
 
 # ---------- PESTAÑAS ----------
-tab1, tab2, tab3 = st.tabs(["📋 Tabla de datos", "📊 Gráficos", "📈 Evolución grado"])
+tab1, tab2 = st.tabs(["📋 Tabla de datos", "📈 Evolución grado"])
 
 with tab1:
     st.header("📋 Datos recogidos")
     st.dataframe(df, use_container_width=True)
 
 with tab2:
-    st.header("📊 Visualización de datos")
-    col1, col2 = st.columns(2)
-
-    with col1:
-        n_vias_escaladas_por_dificultad_y_escalador(df)
-
-    # with col2:
-    #     st.subheader("Nivel de satisfacción")
-    #     st.bar_chart(df["Satisfacción"].value_counts().sort_index())
-
-with tab3:
     st.subheader("📈 Evolución del grado de escalada a lo largo del tiempo")
 
     df_filtrado = evolucion_dificultad_escalada_tiempo(df)
