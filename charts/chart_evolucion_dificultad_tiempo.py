@@ -85,3 +85,40 @@ def evolucion_dificultad_escalada_tiempo(df):
     fig.update_xaxes(tickmode="linear", tickformat=".0f")  # Para X solo si interpreta como número
 
     st.plotly_chart(fig, use_container_width=True)
+
+    return df_filtrado
+
+def kpis_evolucion_dificultad_escalada_tiempo(df_filtrado):
+
+    # --- KPIs debajo del gráfico ---
+    df_kpi = df_filtrado.copy()
+
+    # Total de vías
+    total_vias = len(df_kpi)
+
+    # Dificultad más escalada (modo)
+    if not df_kpi.empty:
+        dificultad_mas_escalada = df_kpi["dificultad_oficial"].mode()[0]
+        total_mas_escalada = (df_kpi["dificultad_oficial"] == dificultad_mas_escalada).sum()
+
+        # Dificultad máxima escalada (alfabéticamente o numéricamente)
+        dificultad_maxima = df_kpi["dificultad_oficial"].max()
+        total_maxima = (df_kpi["dificultad_oficial"] == dificultad_maxima).sum()
+    else:
+        dificultad_mas_escalada = "-"
+        total_mas_escalada = 0
+        dificultad_maxima = "-"
+        total_maxima = 0
+
+    # Mostrar KPIs debajo del gráfico
+    st.markdown("### 📌 Resumen de actividad")
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("🔢 Total vías escaladas", total_vias)
+    col2.metric(f"🔥 Dificultad más repetida", dificultad_mas_escalada)
+    col3.metric(f"⛰️ Dificultad máxima", dificultad_maxima)
+
+    col1_below, col2_below, col3_below = st.columns(3)
+    # col1_below sirve para alinear el resto de KPIs
+    col2_below.metric(f"🔥 Total vías dificultad más repetida ({dificultad_mas_escalada})", total_mas_escalada)
+    col3_below.metric(f"⛰️ Total vías dificultad máxima ({dificultad_maxima})", total_maxima)

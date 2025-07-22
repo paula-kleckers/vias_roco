@@ -20,8 +20,7 @@ from campos.campo_comentarios_tipo_ascension import input_comentarios_tipo_ascen
 from campos.campo_foto import input_foto
 
 from charts.chart_dificultad_escalada import n_vias_escaladas_por_dificultad_y_escalador
-from charts.chart_evolucion_dificultad_tiempo import evolucion_dificultad_escalada_tiempo
-
+from charts.chart_evolucion_dificultad_tiempo import *
 
 # ---------- CONFIGURACIÓN INICIAL ----------
 st.set_page_config(page_title="Roco Climber", layout="wide")
@@ -160,4 +159,5 @@ with tab2:
 with tab3:
     st.subheader("📈 Evolución del grado de escalada a lo largo del tiempo")
 
-    evolucion_dificultad_escalada_tiempo(df)
+    df_filtrado = evolucion_dificultad_escalada_tiempo(df)
+    kpis_evolucion_dificultad_escalada_tiempo(df_filtrado)
