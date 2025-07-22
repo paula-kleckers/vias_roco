@@ -33,7 +33,7 @@ def evolucion_dificultad_escalada_tiempo(df):
     df_filtrado = df[
         (df["escalador"] == escalador_sel) &
         (df["tipo_via"].str.lower() == tipo_via_sel.lower())
-    ]
+    ].copy()
 
     if df_filtrado.empty:
         st.warning("No hay datos para esta combinación.")
