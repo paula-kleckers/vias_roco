@@ -2,7 +2,7 @@ import plotly.express as px
 import streamlit as st
 
 
-def dificultad_por_escalador(df):
+def n_vias_escaladas_por_dificultad_y_escalador(df):
     st.subheader("📈 Vías por dificultad (Plotly)")
 
     if df.empty:

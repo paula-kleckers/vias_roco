@@ -19,7 +19,7 @@ from campos.campo_comentarios_personales import input_comentarios_personales
 from campos.campo_comentarios_tipo_ascension import input_comentarios_tipo_ascension
 from campos.campo_foto import input_foto
 
-from charts.grafico_dificultad_por_escalador import dificultad_por_escalador
+from charts.chart_dificultad_escalada import n_vias_escaladas_por_dificultad_y_escalador
 
 
 # ---------- CONFIGURACIÓN INICIAL ----------
@@ -150,7 +150,7 @@ with tab2:
     col1, col2 = st.columns(2)
 
     with col1:
-        dificultad_por_escalador(df)
+        n_vias_escaladas_por_dificultad_y_escalador(df)
 #
 #     with col2:
 #         st.subheader("Nivel de satisfacción")
