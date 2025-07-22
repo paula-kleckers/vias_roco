@@ -19,8 +19,8 @@ from campos.campo_comentarios_personales import input_comentarios_personales
 from campos.campo_comentarios_tipo_ascension import input_comentarios_tipo_ascension
 from campos.campo_foto import input_foto
 
-from charts.grafico_dificultad_por_escalador import dificultad_por_escalador
-
+from charts.chart_dificultad_escalada import n_vias_escaladas_por_dificultad_y_escalador
+from charts.chart_evolucion_dificultad_tiempo import *
 
 # ---------- CONFIGURACIÓN INICIAL ----------
 st.set_page_config(page_title="Roco Climber", layout="wide")
@@ -139,7 +139,7 @@ with st.sidebar:
         st.info("No hay datos para eliminar.")
 
 # ---------- PESTAÑAS ----------
-tab1, tab2 = st.tabs(["📋 Tabla de datos", "📊 Gráficos"])
+tab1, tab2, tab3 = st.tabs(["📋 Tabla de datos", "📊 Gráficos", "📈 Evolución grado"])
 
 with tab1:
     st.header("📋 Datos recogidos")
@@ -150,8 +150,14 @@ with tab2:
     col1, col2 = st.columns(2)
 
     with col1:
-        dificultad_por_escalador(df)
-#
-#     with col2:
-#         st.subheader("Nivel de satisfacción")
-#         st.bar_chart(df["Satisfacción"].value_counts().sort_index())
+        n_vias_escaladas_por_dificultad_y_escalador(df)
+
+    # with col2:
+    #     st.subheader("Nivel de satisfacción")
+    #     st.bar_chart(df["Satisfacción"].value_counts().sort_index())
+
+with tab3:
+    st.subheader("📈 Evolución del grado de escalada a lo largo del tiempo")
+
+    df_filtrado = evolucion_dificultad_escalada_tiempo(df)
+    kpis_evolucion_dificultad_escalada_tiempo(df_filtrado)
