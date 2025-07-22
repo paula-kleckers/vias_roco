@@ -35,5 +35,11 @@ def n_vias_escaladas_por_dificultad_y_escalador(df):
         color="dificultad_oficial",
         text="n"
     )
-    fig.update_layout(xaxis={'categoryorder': 'category ascending'})
+    fig.update_layout(xaxis={'categoryorder': 'category ascending'},
+                      yaxis=dict(
+                          rangemode="nonnegative",
+                          fixedrange=False
+                      )
+                      )
+    fig.update_yaxes(range=[0, None])
     st.plotly_chart(fig, use_container_width=True)
