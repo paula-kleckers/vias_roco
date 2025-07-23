@@ -142,5 +142,6 @@ with tab1:
 with tab2:
     st.subheader("📈 Evolución del grado de escalada a lo largo del tiempo")
 
-    df_filtrado = evolucion_dificultad_escalada_tiempo(df)
-    kpis_evolucion_dificultad_escalada_tiempo(df_filtrado)
+    if not df.empty:
+        df_filtrado = evolucion_dificultad_escalada_tiempo(df)
+        kpis_evolucion_dificultad_escalada_tiempo(df_filtrado)
