@@ -117,17 +117,23 @@ with st.sidebar:
     st.subheader("🗑️ Eliminar registro")
 
     if not df.empty:
-        fila_a_borrar = st.number_input("Selecciona el número de fila a borrar", min_value=0, max_value=len(df) - 1,
-                                        step=1)
+        fila_a_borrar = st.number_input(
+            "Selecciona el número de fila a borrar",
+            min_value=-1,
+            max_value=len(df) - 1,
+            step=1,
+            value=-1  # Valor "vacío"
+        )
 
         if st.button("Borrar fila"):
-            id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
-            supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
-
-            response = supabase.table("climbing_data").select("*").execute()
-            df = pd.DataFrame(response.data)
-
-            st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
+            if fila_a_borrar != -1:
+                id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
+                supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
+                response = supabase.table("climbing_data").select("*").execute()
+                df = pd.DataFrame(response.data)
+                st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
+            else:
+                st.warning("Selecciona una fila para eliminar.")
 
     else:
         st.info("No hay datos para eliminar.")
