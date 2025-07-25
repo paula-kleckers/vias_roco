@@ -9,7 +9,7 @@ def input_escalador(df):
     if es_nuevo:
         nombre = st.text_input("Introduce el nombre del nuevo escalador")
     else:
-        if 'name' in df.columns and not df['name'].empty:
+        if "escalador" in df.columns:
             escaladores_existentes = df["escalador"].dropna().astype(str).unique().tolist()
         else:
             escaladores_existentes = []
