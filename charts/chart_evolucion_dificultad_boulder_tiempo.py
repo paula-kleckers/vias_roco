@@ -4,18 +4,6 @@ import pandas as pd
 
 import campos.seleccion_roco_tipo_dif as clas_dif
 
-# Convertir dificultad oficial a dificultad estandar
-def obtener_color_estandar(row):
-    rocodromo = row.get("rocodromo", "").strip()
-    dificultad_oficial = row.get("dificultad_oficial", "").strip()
-
-    if rocodromo in ["Climbat", "One Move"]:
-        return clas_dif.convertir_color_rocodromo_a_estandar(rocodromo, dificultad_oficial)
-    elif rocodromo == "Adamanta Gonzalitos":
-        return clas_dif.convertir_vscale_a_color_estandar(dificultad_oficial)
-    else:
-        return clas_dif.convertir_fontainebleau_a_color_estandar(dificultad_oficial)
-
 
 def evolucion_dificultad_boulder_escalada_tiempo(df):
 
@@ -53,7 +41,7 @@ def evolucion_dificultad_boulder_escalada_tiempo(df):
         st.warning("No hay datos para esta combinación.")
         return
 
-    df_filtrado["dificultad_color_estandar"] = df_filtrado.apply(obtener_color_estandar, axis=1)
+    df_filtrado["dificultad_color_estandar"] = df_filtrado.apply(clas_dif.obtener_color_estandar, axis=1)
 
     # Agrupación por período
     freq = opciones_agrupado[agrupado_sel]
