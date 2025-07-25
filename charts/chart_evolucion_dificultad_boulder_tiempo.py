@@ -17,7 +17,7 @@ def obtener_color_estandar(row):
         return clas_dif.convertir_fontainebleau_a_color_estandar(dificultad_oficial)
 
 
-def evolucion_dificultad_escalada_tiempo(df):
+def evolucion_dificultad_boulder_escalada_tiempo(df):
 
     if df.empty:
         st.info("No hay datos para mostrar.")
@@ -25,11 +25,10 @@ def evolucion_dificultad_escalada_tiempo(df):
 
     # Asegurar formato correcto
     df["fecha"] = pd.to_datetime(df["fecha"], errors="coerce")
-    df = df.dropna(subset=["fecha", "dificultad_oficial", "tipo_via", "escalador"])
+    df = df.dropna(subset=["fecha", "dificultad_oficial", "escalador"])
 
     # Filtros
     escaladores = df["escalador"].dropna().unique()
-    tipos_via = df["tipo_via"].dropna().unique()
     opciones_agrupado = {
         "Día": "D",
         "Mes": "M",
@@ -40,9 +39,9 @@ def evolucion_dificultad_escalada_tiempo(df):
     with col1:
         escalador_sel = st.selectbox("Escalador", sorted(escaladores), key="select_escalador_apilado")
     with col2:
-        tipo_via_sel = st.selectbox("Tipo de vía", sorted(tipos_via), key="select_tipo_via_apilado")
-    with col3:
         agrupado_sel = st.selectbox("Agrupar por", list(opciones_agrupado.keys()), key="select_agrupado_apilado")
+
+    tipo_via_sel = "Boulder"  # Sólo boulder para este gráfico
 
     # Filtrado de datos
     df_filtrado = df[

@@ -20,7 +20,7 @@ from campos.campo_comentarios_tipo_ascension import input_comentarios_tipo_ascen
 from campos.campo_foto import input_foto
 
 from charts.chart_dificultad_escalada import n_vias_escaladas_por_dificultad_y_escalador
-from charts.chart_evolucion_dificultad_tiempo import *
+from charts.chart_evolucion_dificultad_boulder_tiempo import *
 
 # ---------- CONFIGURACIÓN INICIAL ----------
 st.set_page_config(page_title="Roco Climber", layout="wide")
@@ -129,7 +129,7 @@ with st.sidebar:
         st.info("No hay datos para eliminar.")
 
 # ---------- PESTAÑAS ----------
-tab1, tab2 = st.tabs(["📋 Tabla de datos", "📈 Evolución grado"])
+tab1, tab2 = st.tabs(["📋 Tabla de datos", "📈 Evolución grado (Boulder)"])
 
 with tab1:
     st.header("📋 Datos recogidos")
@@ -138,5 +138,5 @@ with tab1:
 with tab2:
     st.subheader("📈 Evolución del grado de escalada a lo largo del tiempo")
 
-    df_filtrado = evolucion_dificultad_escalada_tiempo(df)
+    df_filtrado = evolucion_dificultad_boulder_escalada_tiempo(df)
     kpis_evolucion_dificultad_escalada_tiempo(df_filtrado)
