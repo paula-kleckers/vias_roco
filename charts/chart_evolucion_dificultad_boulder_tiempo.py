@@ -154,8 +154,9 @@ def kpis_evolucion_dificultad_escalada_tiempo(df_filtrado):
     col1, col2, col3 = st.columns(3)
     col1.metric("🔢 Total vías escaladas", total_vias)
     col2.metric(f"🔥 Dificultad más repetida", dificultad_mas_escalada)
-    col3.metric(f"⛰️ Dificultad máxima", dificultad_maxima)
+    col3.metric(f"🔥 Total vías dificultad más repetida ({dificultad_mas_escalada})", total_mas_escalada)
 
     col1_below, col2_below, col3_below = st.columns(3)
-    col2_below.metric(f"🔥 Total vías dificultad más repetida ({dificultad_mas_escalada})", total_mas_escalada)
+
+    col2_below.metric(f"⛰️ Dificultad máxima", dificultad_maxima)
     col3_below.metric(f"⛰️ Total vías dificultad máxima ({dificultad_maxima})", total_maxima)
