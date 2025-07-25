@@ -80,12 +80,6 @@ def evolucion_dificultad_escalada_tiempo(df):
         x="fecha_formateada",
         y="conteo",
         color="dificultad_color_estandar",
-        title=f"Vías escaladas – {escalador_sel} ({tipo_via_sel}) agrupadas por {agrupado_sel}",
-        labels={
-            "fecha_formateada": "Fecha",
-            "conteo": "Número de vías",
-            "dificultad_estandar": "Dificultad (estándar)"
-        },
         color_discrete_map={
             clas_dif.dificultad_estandar_boulder[0]: "#d6d6d6",
             clas_dif.dificultad_estandar_boulder[1]: "#ffd700",
@@ -94,6 +88,12 @@ def evolucion_dificultad_escalada_tiempo(df):
             clas_dif.dificultad_estandar_boulder[4]: "#5dade2",
             clas_dif.dificultad_estandar_boulder[5]: "#ec7063",
             clas_dif.dificultad_estandar_boulder[6]: "#2c3e50"
+        },
+        title=f"Vías escaladas – {escalador_sel} ({tipo_via_sel}) agrupadas por {agrupado_sel}",
+        labels={
+            "fecha_formateada": "Fecha",
+            "conteo": "Número de vías",
+            "dificultad_estandar": "Dificultad (estándar)"
         },
         category_orders={
             "dificultad_color_estandar": clas_dif.dificultad_estandar_boulder
