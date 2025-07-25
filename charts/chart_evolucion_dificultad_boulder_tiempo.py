@@ -106,7 +106,7 @@ def evolucion_dificultad_boulder_escalada_tiempo(df):
 
 
 # --- KPIs ---
-def kpis_evolucion_dificultad_escalada_tiempo(df_filtrado):
+def kpis_evolucion_dificultad_boulder_escalada_tiempo(df_filtrado):
     ranking_dificultad = {
         clas_dif.dificultad_estandar_boulder[0]: 0,
         clas_dif.dificultad_estandar_boulder[1]: 1,

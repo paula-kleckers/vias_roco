@@ -21,6 +21,7 @@ from campos.campo_foto import input_foto
 
 from charts.chart_dificultad_escalada import n_vias_escaladas_por_dificultad_y_escalador
 from charts.chart_evolucion_dificultad_boulder_tiempo import *
+from charts.chart_evolucion_dificultad_cuerda_tiempo import *
 
 # ---------- CONFIGURACIÓN INICIAL ----------
 st.set_page_config(page_title="Roco Climber", layout="wide")
@@ -129,7 +130,7 @@ with st.sidebar:
         st.info("No hay datos para eliminar.")
 
 # ---------- PESTAÑAS ----------
-tab1, tab2 = st.tabs(["📋 Tabla de datos", "📈 Evolución grado (Boulder)"])
+tab1, tab2, tab3 = st.tabs(["📋 Tabla de datos", "📈 Evolución grado (Boulder)", "📈 Evolución grado (Cuerda)"])
 
 with tab1:
     st.header("📋 Datos recogidos")
@@ -139,5 +140,18 @@ with tab2:
     st.subheader("📈 Evolución del grado de escalada a lo largo del tiempo")
 
     if not df.empty:
-        df_filtrado = evolucion_dificultad_boulder_escalada_tiempo(df)
-        kpis_evolucion_dificultad_escalada_tiempo(df_filtrado)
+        if "Boulder" not in df["tipo_via"].unique():
+            st.warning("No hay datos de escalada en boulder.")
+        else:
+            df_filtrado = evolucion_dificultad_boulder_escalada_tiempo(df)
+            kpis_evolucion_dificultad_boulder_escalada_tiempo(df_filtrado)
+
+with tab3:
+    st.subheader("📈 Evolución del grado de escalada a lo largo del tiempo")
+
+    if not df.empty:
+        if "Cuerda" not in df["tipo_via"].unique():
+            st.warning("No hay datos de escalada en cuerda.")
+        else:
+            df_filtrado = evolucion_dificultad_cuerda_escalada_tiempo(df)
+            kpis_evolucion_dificultad_cuerda_escalada_tiempo(df_filtrado)

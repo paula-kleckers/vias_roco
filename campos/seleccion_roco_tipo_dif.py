@@ -63,26 +63,6 @@ dificultad_eq_color_estandar = {
     },
 }
 
-# Equivalencias de dificultad oficial en base a la clasificación de la app de Kilter Board
-dificultad_eq_vscale_font = {"V0": ["4a", "4b", "4c"],
-                             "V1": ["5a", "5b"],
-                             "V2": ["5c"],
-                             "V3": ["6a"],
-                             "V3+": ["6a+"],
-                             "V4": ["6b"],
-                             "V4+": ["6b+"],
-                             "V5": ["6c"],
-                             "V5+": ["6c+"],
-                             "V6": ["7a"],
-                             "V6+": ["7a+"],
-                             "V7": ["7b"],
-                             "V7+": ["7b+"],
-                             "V8": ["7c"],
-                             "V8+": ["7c+"],
-                             "V9": ["8a"],
-                             "V9+": ["8a+"],
-                             }
-
 # Equivalencias entre los colores estándar establecidos y las dificultades por escala francesa
 # (se ha seguido aproximadamente la clasificación de boulder del Climbat, aunque está abierta a modificaciones)
 dificultad_eq_estandar_font = {
@@ -107,8 +87,7 @@ dificultad_eq_estandar_vscale = {
     dificultad_estandar_boulder[6]: ["V7", "V7+", "V8"]
 }
 
-
-# FUNCIONES DE EQUIVALENCIA PARA LAS VISUALIZACIONES
+# FUNCIONES DE EQUIVALENCIA PARA LAS VISUALIZACIONES (BOULDER)
 
 # 1. Convertir color de rocódromo al color estándar
 def convertir_color_rocodromo_a_estandar(rocodromo: str, color: str) -> str | None:
@@ -152,3 +131,48 @@ def obtener_color_estandar(row):
         return convertir_vscale_a_color_estandar(dificultad_oficial)
     else:
         return convertir_fontainebleau_a_color_estandar(dificultad_oficial)
+
+
+# -------------------------------------------------------------------------------------------------------------------
+
+# Equivalencias de dificultad oficial en base a la clasificación de la app de Kilter Board
+dificultad_eq_vscale_font = {"V0": ["4a", "4b", "4c"],
+                             "V1": ["5a", "5b"],
+                             "V2": ["5c"],
+                             "V3": ["6a"],
+                             "V3+": ["6a+"],
+                             "V4": ["6b"],
+                             "V4+": ["6b+"],
+                             "V5": ["6c"],
+                             "V5+": ["6c+"],
+                             "V6": ["7a"],
+                             "V6+": ["7a+"],
+                             "V7": ["7b"],
+                             "V7+": ["7b+"],
+                             "V8": ["7c"],
+                             "V8+": ["7c+"],
+                             "V9": ["8a"],
+                             "V9+": ["8a+"],
+                             }
+
+# FUNCIONES DE EQUIVALENCIA PARA VISUALIZACIONES (CUERDA)
+
+def vscale_to_font_custom_vscale(vscale_grade: str) -> str:
+    vscale_grade = vscale_grade.strip().upper()
+    if vscale_grade == "V0":
+        return "4b"
+    elif vscale_grade == "V1":
+        return "5b"
+    elif vscale_grade in dificultad_eq_vscale_font:
+        return dificultad_eq_vscale_font[vscale_grade][0]
+    else:
+        return "?"  # Valor desconocido
+
+# Función auxiliar que convierte solo si el grado está en V-scale
+def convertir_si_vscale(grade):
+    grade = grade.strip()
+    if grade.startswith("V"):
+        return vscale_to_font_custom_vscale(grade)
+    else:
+        return grade  # Deja el valor original si no es V-scale
+
