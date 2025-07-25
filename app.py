@@ -124,8 +124,8 @@ with st.sidebar:
         if st.button("Borrar fila"):
             id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
             supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
-            st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
             st.warning("Recuerda resetear el formulario para evitar sobrescribir datos.")
+            st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
 
     else:
         st.info("No hay datos para eliminar.")
