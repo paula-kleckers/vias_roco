@@ -4,6 +4,8 @@ opciones = {
         "": [""],
         "Boulder": ["", "🩵 Turquesa", "🟩 Verde", "🟨 Amarilla", "⬜ Blanca", "🟦 Azul", "🟥 Roja", "⬛ Negra"],
         "Cuerda": ["", "🟩 Verde", "🟨 Amarilla", "🟥 Roja", "⬛ Negra"],
+        "Stokt": ["", "4a", "4b", "4c", "5a", "5b", "5c", "6a", "6a+", "6b", "6b+", "6c", "6c+", "7a", "7a+", "7b",
+                  "7b+", "7c", "7c+", "8a", "8a+", "8b", "8b+", "8c", "8c+"],
         "Kilter": ["", "4a", "4b", "4c", "5a", "5b", "5c", "6a", "6a+", "6b", "6b+", "6c", "6c+", "7a", "7a+", "7b",
                    "7b+", "7c", "7c+", "8a", "8a+", "8b", "8b+", "8c", "8c+"],
     },
@@ -28,7 +30,111 @@ opciones = {
     },
     "Adamanta Gonzalitos": {
         "": [""],
-        "Boulder": ["", "V0", "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13"],
-        "Cuerda": ["", "V0", "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13"],
+        "Boulder": ["", "V0", "V1", "V2", "V3", "V3+", "V4", "V4+", "V5", "V5+", "V6", "V6+", "V7", "V7+", "V8", "V8+",
+                    "V9", "V9+"],
+        "Cuerda": ["", "V0", "V1", "V2", "V3", "V3+", "V4", "V4+", "V5", "V5+", "V6", "V6+", "V7", "V7+", "V8", "V8+",
+                   "V9", "V9+"],
     },
 }
+
+# Dificultad estándar definida para Boulder (se ha seguido el convenio correpsondiente al Climbat)
+dificultad_estandar_boulder = ["⬜ Blanca", "🟨 Amarilla", "🟧 Naranja", "🟩 Verde", "🟦 Azul", "🟥 Roja", "⬛ Negra"]
+
+# Mapeo de equivalencias de dificultad entre los diferentes rocódromos
+dificultad_eq_color_estandar = {
+    "One Move": {
+        "🩵 Turquesa": dificultad_estandar_boulder[0],
+        "🟩 Verde": dificultad_estandar_boulder[1],
+        "🟨 Amarilla": dificultad_estandar_boulder[2],
+        "⬜ Blanca": dificultad_estandar_boulder[3],
+        "🟦 Azul": dificultad_estandar_boulder[4],
+        "🟥 Roja": dificultad_estandar_boulder[5],
+        "⬛ Negra": dificultad_estandar_boulder[6],
+    },
+    "Climbat": {
+        "⬜ Blanca": dificultad_estandar_boulder[0],
+        "🟨 Amarilla": dificultad_estandar_boulder[1],
+        "🟧 Naranja": dificultad_estandar_boulder[2],
+        "🟩 Verde": dificultad_estandar_boulder[3],
+        "🟦 Azul": dificultad_estandar_boulder[4],
+        "🟥 Roja": dificultad_estandar_boulder[5],
+        "⬛ Negra": dificultad_estandar_boulder[6],
+    },
+}
+
+# Equivalencias de dificultad oficial en base a la clasificación de la app de Kilter Board
+dificultad_eq_vscale_font = {"V0": ["4a", "4b", "4c"],
+                             "V1": ["5a", "5b"],
+                             "V2": ["5c"],
+                             "V3": ["6a"],
+                             "V3+": ["6a+"],
+                             "V4": ["6b"],
+                             "V4+": ["6b+"],
+                             "V5": ["6c"],
+                             "V5+": ["6c+"],
+                             "V6": ["7a"],
+                             "V6+": ["7a+"],
+                             "V7": ["7b"],
+                             "V7+": ["7b+"],
+                             "V8": ["7c"],
+                             "V8+": ["7c+"],
+                             "V9": ["8a"],
+                             "V9+": ["8a+"],
+                             }
+
+# Equivalencias entre los colores estándar establecidos y las dificultades por escala francesa
+# (se ha seguido aproximadamente la clasificación de boulder del Climbat, aunque está abierta a modificaciones)
+dificultad_eq_estandar_font = {
+    dificultad_estandar_boulder[0]: ["4a", "4b", "4c"],
+    dificultad_estandar_boulder[1]: ["5a", "5b"],
+    dificultad_estandar_boulder[2]: ["5c", "6a"],
+    dificultad_estandar_boulder[3]: ["6a+", "6b"],
+    dificultad_estandar_boulder[4]: ["6b+", "6c"],
+    dificultad_estandar_boulder[5]: ["6c+", "7a", "7a+"],
+    dificultad_estandar_boulder[6]: ["7b", "7b+", "7c"]
+}
+
+# Equivalencias entre los colores estándar establecidos y las dificultades por v-scale
+# (se ha seguido un criterio por sensaciones, aunque está abierta a modificaciones)
+dificultad_eq_estandar_vscale = {
+    dificultad_estandar_boulder[0]: ["V0"],
+    dificultad_estandar_boulder[1]: ["V1"],
+    dificultad_estandar_boulder[2]: ["V2", "V3"],
+    dificultad_estandar_boulder[3]: ["V3+", "V4"],
+    dificultad_estandar_boulder[4]: ["V4+", "V5"],
+    dificultad_estandar_boulder[5]: ["V5+", "V6", "V6+"],
+    dificultad_estandar_boulder[6]: ["V7", "V7+", "V8"]
+}
+
+
+# FUNCIONES DE EQUIVALENCIA PARA LAS VISUALIZACIONES
+
+# 1. Convertir color de rocódromo al color estándar
+def convertir_color_rocodromo_a_estandar(rocodromo: str, color: str) -> str | None:
+    """
+    Convierte un color de un rocódromo (One Move o Climbat) al color estándar.
+    """
+    mapa = dificultad_eq_color_estandar.get(rocodromo)
+    if not mapa:
+        raise ValueError(f"Rocódromo no reconocido: {rocodromo}")
+    return mapa.get(color)
+
+# 2. Convertir grado V-scale al color estándar
+def convertir_vscale_a_color_estandar(vscale: str) -> str | None:
+    """
+    Convierte un grado V-scale al color estándar correspondiente.
+    """
+    for color, grados in dificultad_eq_estandar_vscale.items():
+        if vscale in grados:
+            return color
+    return None
+
+# 3. Convertir grado Fontainebleau al color estándar
+def convertir_fontainebleau_a_color_estandar(grado_font: str) -> str | None:
+    """
+    Convierte un grado Fontainebleau (ej. '6b+') al color estándar correspondiente.
+    """
+    for color, grados in dificultad_eq_estandar_font.items():
+        if grado_font in grados:
+            return color
+    return None
