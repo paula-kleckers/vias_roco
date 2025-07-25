@@ -37,7 +37,7 @@ def evolucion_dificultad_boulder_escalada_tiempo(df):
         (df["tipo_via"].str.lower() == tipo_via_sel.lower())
     ].copy()
 
-    if df_filtrado.empty:
+    if df_filtrado is None or df_filtrado.empty:
         st.warning("No hay datos para esta combinación.")
         return
 
@@ -116,6 +116,10 @@ def kpis_evolucion_dificultad_boulder_escalada_tiempo(df_filtrado):
         clas_dif.dificultad_estandar_boulder[5]: 5,
         clas_dif.dificultad_estandar_boulder[6]: 6
     }
+
+    if df_filtrado is None or df_filtrado.empty:
+        st.warning("No hay datos para esta combinación.")
+        return
 
     df_kpi = df_filtrado.copy()
     total_vias = len(df_kpi)
