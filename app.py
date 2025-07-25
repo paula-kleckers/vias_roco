@@ -39,7 +39,7 @@ with open("client_id/client_id.txt", "r") as f:
 
 # Cargar datos si existen
 try:
-    response = supabase.table("climbing_data").select("*").execute()
+    response = supabase.table("climbing_data").select("*").order("fecha").execute()
     df = pd.DataFrame(response.data)
 except Exception as e:
     st.error("Error al cargar los datos desde Supabase")
