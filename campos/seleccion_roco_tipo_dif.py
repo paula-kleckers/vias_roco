@@ -1,3 +1,4 @@
+# Listado de rocódromos, tipo de vía y dificultades asociadas a las mismas
 opciones = {
     "": {"": [""]},
     "One Move": {
@@ -138,3 +139,16 @@ def convertir_fontainebleau_a_color_estandar(grado_font: str) -> str | None:
         if grado_font in grados:
             return color
     return None
+
+# Convertir dificultad oficial a dificultad estándar
+def obtener_color_estandar(row):
+    rocodromo = row.get("rocodromo", "").strip()
+    dificultad_oficial = row.get("dificultad_oficial", "").strip()
+
+    # NOTA: Depende del rocódromo!!!!
+    if rocodromo in ["Climbat", "One Move"]:
+        return convertir_color_rocodromo_a_estandar(rocodromo, dificultad_oficial)
+    elif rocodromo == "Adamanta Gonzalitos":
+        return convertir_vscale_a_color_estandar(dificultad_oficial)
+    else:
+        return convertir_fontainebleau_a_color_estandar(dificultad_oficial)
