@@ -81,19 +81,23 @@ def evolucion_dificultad_cuerda_escalada_tiempo(df):
     return df_filtrado
 
 def kpis_evolucion_dificultad_cuerda_escalada_tiempo(df_filtrado):
-    col_kpi1, col_kpi2 = st.columns(2)
-
     if df_filtrado is None or df_filtrado.empty:
         st.warning("No hay datos para esta combinación.")
         return
+
+    col_kpi1, col_kpi2, col_kpi3 = st.columns(3)
+    col_kpi1_below, col_kpi2_below, col_kpi3_below = st.columns(3)
 
     # Total vías escaladas
     total_vias = len(df_filtrado)
 
     # Dificultad máxima en Fontainebleau
     dificultad_max_font = "-"
+    dificultad_frec = "-"
+    frecuencia_frec = 0
+    veces_max = 0
+
     if "grado_fontainebleau" in df_filtrado.columns:
-        dificultades_font = df_filtrado["grado_fontainebleau"].dropna().unique().tolist()
         orden_font = [
             "4a", "4b", "4c",
             "5a", "5b", "5c",
@@ -101,10 +105,27 @@ def kpis_evolucion_dificultad_cuerda_escalada_tiempo(df_filtrado):
             "7a", "7a+", "7b", "7b+", "7c", "7c+",
             "8a", "8a+"
         ]
+
+        dificultades_font = df_filtrado["grado_fontainebleau"].dropna().unique().tolist()
         dificultades_font_validas = [x for x in dificultades_font if x in orden_font]
+
         if dificultades_font_validas:
             dificultad_max_font = max(dificultades_font_validas, key=lambda x: orden_font.index(x))
 
-    # Mostrar KPIs
+        # Dificultad más escalada (moda) y frecuencia
+        if not df_filtrado["grado_fontainebleau"].dropna().empty:
+            dificultad_frec = df_filtrado["grado_fontainebleau"].mode()[0]
+            frecuencia_frec = df_filtrado["grado_fontainebleau"].value_counts()[dificultad_frec]
+
+        # Veces que se ha escalado la dificultad máxima
+        if dificultad_max_font != "-":
+            veces_max = df_filtrado[df_filtrado["grado_fontainebleau"] == dificultad_max_font].shape[0]
+
+    # Mostrar KPIs en dos filas
     col_kpi1.metric("🔢 Total vías escaladas", total_vias)
-    col_kpi2.metric("⛰️ Dificultad máx. escalada", dificultad_max_font)
+    col_kpi2.metric("🔥 Dificultad más repetida", dificultad_frec)
+    col_kpi3.metric(f"🔥 Total vías dificultad más repetida ({dificultad_frec})", frecuencia_frec)
+
+    col_kpi2_below.metric("⛰️ Dificultad máxima", dificultad_max_font)
+    col_kpi3_below.metric(f"⛰️ Total vías dificultad máxima ({dificultad_max_font})", veces_max)
+
