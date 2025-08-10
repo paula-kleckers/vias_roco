@@ -52,11 +52,15 @@ except Exception as e:
 
 # ---------- FORMULARIO ----------
 with st.sidebar:
+
+    st.text(" Resetea el formulario para recargar los datos y evitar sobrescribirlos.")
     # Botón para reiniciar el formulario
     if st.button("🔄 Resetear formulario"):
         st.session_state.clear()
 
     st.header("Índice de fila para el registro")
+    st.text("Si el índice corresponde con una fila existente, esta fila se actualizará y, al resetear el formulario, "
+            "la anterior recuperará la información anterior y se añadirá una nueva con la nueva información")
     indice = input_indice(df)
     st.markdown("---")
 
