@@ -23,6 +23,8 @@ from charts.chart_dificultad_escalada import n_vias_escaladas_por_dificultad_y_e
 from charts.chart_evolucion_dificultad_boulder_tiempo import *
 from charts.chart_evolucion_dificultad_cuerda_tiempo import *
 
+import utils as u
+
 # ---------- CONFIGURACIÓN INICIAL ----------
 st.set_page_config(page_title="Roco Climber", layout="wide")
 
@@ -63,6 +65,9 @@ with st.sidebar:
             "la anterior recuperará la información anterior y se añadirá una nueva con la nueva información")
     indice = input_indice(df)
     st.markdown("---")
+
+    # 📌 Aquí llamas a la función para precargar valores
+    u.cargar_valores_indice(df, indice)
 
     # Se agregan registros fuera de un formulario para garantizar que son dinámicos
     st.header("Agregar registro")

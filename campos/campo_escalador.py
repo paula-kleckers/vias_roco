@@ -4,23 +4,29 @@ def input_escalador(df):
     st.header("Escalador")
 
     # Checkbox para elegir si es nuevo o no
-    es_nuevo = st.checkbox("Nuevo escalador", value=False)
+    es_nuevo = st.checkbox(
+        "Nuevo escalador",
+        value=st.session_state.get("es_nuevo_escalador", False),
+        key="es_nuevo_escalador"
+    )
 
     if es_nuevo:
-        nombre = st.text_input("Introduce el nombre del nuevo escalador")
+        st.text_input(
+            "Introduce el nombre del nuevo escalador",
+            value=st.session_state.get("nombre_escalador", ""),
+            key="nombre_escalador"
+        )
     else:
-        if "escalador" in df.columns:
-            escaladores_existentes = df["escalador"].dropna().astype(str).unique().tolist()
-        else:
-            escaladores_existentes = []
-
-        escaladores_existentes = sorted(escaladores_existentes)
+        escaladores_existentes = sorted(
+            df["escalador"].dropna().astype(str).unique().tolist()) if "escalador" in df.columns else []
         escaladores_existentes = [""] + escaladores_existentes
 
-        nombre = st.selectbox(
+        st.selectbox(
             "Selecciona un escalador",
             escaladores_existentes,
-            help="Selecciona un escalador registrado. Si no está, selecciona Nuevo escalador e introduce el nombre"
+            index=escaladores_existentes.index(st.session_state.get("nombre_escalador", ""))
+            if st.session_state.get("nombre_escalador", "") in escaladores_existentes else 0,
+            key="nombre_escalador"
         )
 
-    return nombre.strip()
+    return st.session_state.nombre_escalador.strip()
