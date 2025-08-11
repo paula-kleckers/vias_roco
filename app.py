@@ -55,7 +55,7 @@ with st.sidebar:
 
     st.text(" Resetea el formulario para recargar los datos y evitar sobrescribirlos.")
     # Botón para reiniciar el formulario
-    if st.button("🔄 Resetear formulario"):
+    if st.button("🔄 Resetear formulario", key="reset_formulario"):
         st.session_state.clear()
 
     st.header("Índice de fila para el registro")
@@ -85,9 +85,15 @@ with st.sidebar:
     st.markdown("---")
     ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"), CLIENT_ID)
 
-    # Se genera el formulario para poder utilizar el botón de guardado
-    with st.form(key="formulario_usuario"):
-        submit_button = st.form_submit_button("Guardar")
+    col_guardar, col_reset = st.columns([3, 1])
+    with col_guardar:
+        # Se genera el formulario para poder utilizar el botón de guardado
+        with st.form(key="formulario_usuario"):
+            submit_button = st.form_submit_button("Guardar")
+    with col_reset:
+        if st.button("🔄 Reset", key="reset_guardar"):
+            st.session_state.clear()
+
 
     if submit_button:
         nuevo_registro = {
@@ -123,13 +129,19 @@ with st.sidebar:
 
     if not df.empty:
         fila_a_borrar = st.number_input("Selecciona el número de fila a borrar", min_value=0, max_value=len(df) - 1,
-                                        step=1)
+                                        value=len(df)-1, step=1)
 
-        if st.button("Borrar fila"):
-            id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
-            supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
-            st.warning("Recuerda resetear el formulario para evitar sobrescribir datos.")
-            st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
+        col_borrar, col_reset = st.columns([2, 1])
+
+        with col_borrar:
+            if st.button("Borrar fila"):
+                id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
+                supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
+                st.warning("Recuerda resetear el formulario para evitar sobrescribir datos.")
+                st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
+        with col_reset:
+            if st.button("🔄 Reset", key="reset_borrar"):
+                st.session_state.clear()
 
     else:
         st.info("No hay datos para eliminar.")
