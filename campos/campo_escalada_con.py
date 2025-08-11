@@ -9,9 +9,12 @@ def input_escalada_con(df, escalador_seleccionado):
     return escalada_con_str
 
 def escalada_con_existentes(df, escalador_seleccionado):
-    # Multiselectbox de compañeros de escalda registrados
+    # Multiselectbox de compañeros de escalada registrados
 
     st.header("Escalada con...")
+
+    if "escalada_con_existente" not in st.session_state:
+        st.session_state.escalada_con_existente = []
 
     # Extraer sugerencias como antes, desde el DataFrame actual
     escaladores = df["escalador"].dropna().unique().tolist() if "escalador" in df.columns else []
@@ -33,14 +36,15 @@ def escalada_con_existentes(df, escalador_seleccionado):
     listado = sorted(set(escaladores + escalada_con_existentes))
     listado = [nombre for nombre in listado if nombre != escalador_seleccionado]
 
-    escalada_con_existente = st.multiselect(
+    st.multiselect(
         "Escalada con...",
         options=listado,
-        help="Selecciona compañeros. Si no están, añádelos en la cajas de texto de abajo",
-        default=[]
+        default=st.session_state.escalada_con_existente,
+        key="escalada_con_existente",
+        help="Selecciona compañeros. Si no están, añádelos en la caja de texto de abajo"
     )
 
-    return escalada_con_existente
+    return st.session_state.escalada_con_existente
 
 
 def escalada_con_nuevos():

@@ -27,13 +27,38 @@ def cargar_valores_indice(df, indice):
         st.session_state.indice_actual = indice
         if 0 <= indice < len(df):
             fila = df.iloc[indice]
-            st.session_state.es_nuevo_escalador = False
+            # Escalador
             st.session_state.nombre_escalador = fila.get("escalador", "")
-            st.session_state.escalada_con_existente = fila.get("escalada_con", "").split(", ")
-            # ... aquí inicializas todos los campos con valores de esa fila
+            # Escalada con
+            st.session_state.escalada_con_existente = cargar_escalada_con_desde_fila(df.iloc[indice])
+            st.session_state.companeros = []  # Los nuevos no están en la base
+            # Fecha
+
+            #TODO: Cargar los demás campos de la fila
+
         else:
             # índice no válido → limpiar campos
-            st.session_state.es_nuevo_escalador = False
             st.session_state.nombre_escalador = ""
             st.session_state.escalada_con_existente = []
             # ... limpiar los demás campos
+
+            # TODO: Limpiar los demás campos de la fila
+
+
+def cargar_escalada_con_desde_fila(fila):
+    """
+        Carga en st.session_state.escalada_con_existente el valor de 'escalada_con'
+        de la fila pasada, siempre que no esté vacío ni sea [].
+    """
+
+    valor_escalada_con = fila.get("escalada_con", "")
+
+    if isinstance(valor_escalada_con, str):
+        lista = [x.strip() for x in valor_escalada_con.split(",") if x.strip()]
+    elif isinstance(valor_escalada_con, list):
+        lista = [x.strip() for x in valor_escalada_con if isinstance(x, str) and x.strip()]
+    else:
+        lista = []
+
+    return lista
+
