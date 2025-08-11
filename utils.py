@@ -3,6 +3,8 @@ import pandas as pd
 import os
 from supabase import create_client, Client
 
+from datetime import datetime, date
+
 # Tus credenciales de Supabase
 url = "https://ubnslrintcfolygbnqsb.supabase.co"
 with open("client_id/supabase_key.txt", "r") as f:
@@ -30,9 +32,10 @@ def cargar_valores_indice(df, indice):
             # Escalador
             st.session_state.nombre_escalador = fila.get("escalador", "")
             # Escalada con
-            st.session_state.escalada_con_existente = cargar_escalada_con_desde_fila(df.iloc[indice])
+            st.session_state.escalada_con_existente = cargar_escalada_con_desde_fila(fila)
             st.session_state.companeros = []  # Los nuevos no están en la base
             # Fecha
+            st.session_state.fecha = cargar_fecha_desde_fila(fila)
 
             #TODO: Cargar los demás campos de la fila
 
@@ -40,6 +43,7 @@ def cargar_valores_indice(df, indice):
             # índice no válido → limpiar campos
             st.session_state.nombre_escalador = ""
             st.session_state.escalada_con_existente = []
+            st.session_state.fecha = date.today()
             # ... limpiar los demás campos
 
             # TODO: Limpiar los demás campos de la fila
@@ -62,3 +66,14 @@ def cargar_escalada_con_desde_fila(fila):
 
     return lista
 
+def cargar_fecha_desde_fila(fila):
+    valor_fecha = fila.get("fecha", "")
+    if valor_fecha:
+        if isinstance(valor_fecha, str):
+            try:
+                return datetime.strptime(valor_fecha, "%Y-%m-%d").date()
+            except:
+                return date.today()
+        elif isinstance(valor_fecha, (datetime, date)):
+            return valor_fecha if isinstance(valor_fecha, date) else valor_fecha.date()
+    return date.today()
