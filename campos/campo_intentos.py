@@ -3,6 +3,8 @@ import streamlit as st
 
 def input_intentos(tipo_ascension):
 
+    valor_actual = st.session_state.get("intentos", 0)
+
     if tipo_ascension == "👀 A vista" or tipo_ascension == "⚡ Flash":
         # Si es A vista o Flash, no se permite más de un intento
         intentos = st.number_input("Intentos (en la fecha seleccionada)", value=1, disabled=True,
@@ -11,6 +13,7 @@ def input_intentos(tipo_ascension):
     elif tipo_ascension == "✅ Completada":
         # Si es Completada, se permite cualquier número de intentos mayor que 1
         intentos = st.number_input("Intentos (en la fecha seleccionada)", min_value=2, max_value=100, step=1,
+                                   value=max(2, valor_actual),
                                    help="Selecciona el número de intentos realizados en la fecha seleccionada.")
 
     elif tipo_ascension == '📚 Proyecto' or tipo_ascension == "🗑 Eliminada":
@@ -21,6 +24,7 @@ def input_intentos(tipo_ascension):
     else:
         # Si es Intentada o Top Rope, se permite cualquier número de intentos mayor que 1
         intentos = st.number_input("Intentos (en la fecha seleccionada)", min_value=1, max_value=100, step=1,
+                                   value=max(1, valor_actual),
                                    help="Selecciona el número de intentos realizados en la fecha seleccionada.")
 
     return intentos
