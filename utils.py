@@ -45,6 +45,8 @@ def cargar_valores_indice(df, indice):
             st.session_state.tipo_ascension = cargar_tipo_ascension_desde_fila(fila)
             # Intentos
             st.session_state.intentos = cargar_intentos_desde_fila(fila)
+            # Valoración de la vía
+            st.session_state.valoracion = cargar_valoracion_desde_fila(fila)
 
             #TODO: Cargar los demás campos de la fila
 
@@ -60,6 +62,7 @@ def cargar_valores_indice(df, indice):
             # Tipo de ascensión
             st.session_state.tipo_ascension = ""
             st.session_state.intentos = 0
+            st.session_state.valoracion = ""
 
             # ... limpiar los demás campos
 
@@ -131,3 +134,22 @@ def cargar_tipo_ascension_desde_fila(fila):
 def cargar_intentos_desde_fila(fila):
     valor = fila.get("intentos", 0) if fila is not None else ""
     return valor
+
+def cargar_valoracion_desde_fila(fila):
+    opciones = ["",
+                "🔛 Calentamiento",
+                "🥱 Aburrida",
+                "☠ Criminal",
+                "😫 Muy mala",
+                "😕 Mala",
+                "😐 Media",
+                "😋 Buena",
+                "😁 Muy buena",
+                "🤪 Locura para bien"]
+
+    valor = fila.get("valoracion", "") if fila is not None else ""
+
+    if valor in opciones:
+        return valor
+    else:
+        return opciones[0]
