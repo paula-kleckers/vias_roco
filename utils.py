@@ -7,6 +7,7 @@ from datetime import datetime, date
 
 from campos.seleccion_roco_tipo_dif import opciones
 
+
 # Tus credenciales de Supabase
 url = "https://ubnslrintcfolygbnqsb.supabase.co"
 with open("client_id/supabase_key.txt", "r") as f:
@@ -40,6 +41,8 @@ def cargar_valores_indice(df, indice):
             st.session_state.fecha = cargar_fecha_desde_fila(fila)
             # Rocódromo
             st.session_state.rocodromo = cargar_rocodromo_desde_fila(fila, opciones)
+            # Tipo de ascensión
+            st.session_state.tipo_ascension = cargar_tipo_ascension_desde_fila(fila)
 
             #TODO: Cargar los demás campos de la fila
 
@@ -52,6 +55,8 @@ def cargar_valores_indice(df, indice):
             # Rocódromo
             rocodromos = list(opciones.keys())
             st.session_state.rocodromo = rocodromos[0] if rocodromos else ""
+            # Tipo de ascensión
+            st.session_state.tipo_ascension = ""
 
             # ... limpiar los demás campos
 
@@ -95,3 +100,27 @@ def cargar_rocodromo_desde_fila(fila, opciones):
     else:
         return rocodromos[0]  # valor por defecto si no está en la lista
 
+#TODO: Falta cargar los campos de tipo de via y dificultad oficial
+def cargar_tipo_ascension_desde_fila(fila):
+    """
+    Carga el tipo de ascensión desde la fila si existe y es válido.
+    Si no existe o no es válido, devuelve la primera opción por defecto.
+    """
+
+    # TODO: Se puede hacer genérico para las opciones de tipo de ascensión
+
+    opciones = ["",
+                "👀 A vista",
+                "⚡ Flash",
+                "✅ Completada",
+                "❌ Intentada",
+                "🪢 Top rope",
+                "📚 Proyecto",
+                "🗑 Eliminada"]
+
+    valor = fila.get("tipo_ascension", "") if fila is not None else ""
+
+    if valor in opciones:
+        return valor
+    else:
+        return opciones[0]

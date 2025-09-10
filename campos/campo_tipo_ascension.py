@@ -9,7 +9,11 @@ def input_tipo_ascension():
                 "🪢 Top rope",
                 "📚 Proyecto",
                 "🗑 Eliminada"]
-    return st.selectbox("Tipo de ascensión", opciones,
+
+    valor_actual = st.session_state.get("tipo_ascension", "")
+    index = opciones.index(valor_actual) if valor_actual in opciones else 0
+
+    return st.selectbox("Tipo de ascensión", opciones, index=index,
                         help="Selecciona la dificultad que crees que debería asignarse a la vía.\n"
                              "👀 A vista: Vía completada en el primer intento sin información previa.\n"
                              "⚡ Flash: Vía completada en el primer intento con información previa.\n"
