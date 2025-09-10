@@ -31,11 +31,14 @@ def evolucion_dificultad_boulder_escalada_tiempo(df):
 
     tipo_via_sel = "Boulder"  # Sólo boulder para este gráfico
 
-    # Filtrado de datos
+    # Filtrar datos solo completadas
+    vias_completadas = ["👀 A vista", "⚡ Flash", "✅ Completada"]
+
     df_filtrado = df[
         (df["escalador"] == escalador_sel) &
-        (df["tipo_via"].str.lower() == tipo_via_sel.lower())
-    ].copy()
+        (df["tipo_via"].str.lower() == tipo_via_sel.lower()) &
+        (df["tipo_ascension"].isin(vias_completadas))
+        ].copy()
 
     if df_filtrado is None or df_filtrado.empty:
         st.warning("No hay datos para esta combinación.")
@@ -56,7 +59,8 @@ def evolucion_dificultad_boulder_escalada_tiempo(df):
         df_filtrado["fecha_formateada"] = df_filtrado["fecha_agrupada"].dt.strftime("%Y")
 
     # Agrupar por fecha y dificultad estándar
-    agrupado = df_filtrado.groupby(["fecha_agrupada", "fecha_formateada", "dificultad_color_estandar"]).size().reset_index(name="conteo")
+    agrupado = df_filtrado.groupby(["fecha_agrupada", "fecha_formateada", "dificultad_color_estandar"]
+                                   ).size().reset_index(name="conteo")
 
     # Orden cronológico
     agrupado = agrupado.sort_values("fecha_agrupada")
@@ -121,34 +125,45 @@ def kpis_evolucion_dificultad_boulder_escalada_tiempo(df_filtrado):
         st.warning("No hay datos para esta combinación.")
         return
 
-    df_kpi = df_filtrado.copy()
-    total_vias = len(df_kpi)
+    # Subconjuntos
+    vias_completadas = ["👀 A vista", "⚡ Flash", "✅ Completada"]
+    vias_validas_total = ["👀 A vista", "⚡ Flash", "✅ Completada", "❌ Intentada"]
 
-    dificultades_validas = [d for d in df_kpi["dificultad_color_estandar"].dropna().unique() if d in ranking_dificultad]
+    df_total = df_filtrado[df_filtrado["tipo_ascension"].isin(vias_validas_total)]
+    df_completadas = df_filtrado[df_filtrado["tipo_ascension"].isin(vias_completadas)]
+
+    total_vias_completadas = len(df_completadas)
+    total_vias_validas = len(df_total)
+
+    dificultades_validas = [d for d in df_completadas["dificultad_color_estandar"].dropna().unique() if d in ranking_dificultad]
 
     if dificultades_validas:
         dificultad_maxima = max(dificultades_validas, key=lambda x: ranking_dificultad[x])
     else:
         dificultad_maxima = "-"
 
-    modo = df_kpi["dificultad_color_estandar"].mode()
+    modo = df_completadas["dificultad_color_estandar"].mode()
     if not modo.empty and modo[0] in ranking_dificultad:
         dificultad_mas_escalada = modo[0]
-        total_mas_escalada = (df_kpi["dificultad_color_estandar"] == dificultad_mas_escalada).sum()
+        total_mas_escalada = (df_completadas["dificultad_color_estandar"] == dificultad_mas_escalada).sum()
     else:
         dificultad_mas_escalada = "-"
         total_mas_escalada = 0
 
-    total_maxima = (df_kpi["dificultad_color_estandar"] == dificultad_maxima).sum() if dificultad_maxima != "-" else 0
+    total_maxima = (df_completadas["dificultad_color_estandar"] == dificultad_maxima).sum() if dificultad_maxima != "-" else 0
 
     st.markdown("### 📌 Resumen de actividad")
 
     col1, col2, col3 = st.columns(3)
-    col1.metric("🔢 Total vías escaladas", total_vias)
+    col1.metric("✅ Total vías completadas", total_vias_completadas)
     col2.metric(f"🔥 Dificultad más repetida", dificultad_mas_escalada)
     col3.metric(f"🔥 Total vías dificultad más repetida ({dificultad_mas_escalada})", total_mas_escalada)
 
     col1_below, col2_below, col3_below = st.columns(3)
-
+    col1_below.metric("🔢 Total vías válidas", total_vias_validas)
     col2_below.metric(f"⛰️ Dificultad máxima", dificultad_maxima)
     col3_below.metric(f"⛰️ Total vías dificultad máxima ({dificultad_maxima})", total_maxima)
+
+    # col1_below2, col2_below2, col3_below2 = st.columns(3)
+    #
+    # col1_below2.metric("🔢 Total vías válidas", total_vias_validas)
