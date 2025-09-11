@@ -88,16 +88,17 @@ with st.sidebar:
     st.markdown("---")
     nombre_via = input_nombre_via(df, rocodromo)
     st.markdown("---")
-    ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"), CLIENT_ID)
 
-    col_guardar, col_reset = st.columns([3, 1])
-    with col_guardar:
-        # Se genera el formulario para poder utilizar el botón de guardado
-        with st.form(key="formulario_usuario"):
-            submit_button = st.form_submit_button("Guardar")
-    with col_reset:
-        if st.button("🔄 Reset", key="reset_guardar"):
-            st.session_state.clear()
+
+    #col_guardar, col_reset = st.columns([3, 1])
+    #with col_guardar:
+    # Se genera el formulario para poder utilizar el botón de guardado
+    with st.form(key="formulario_usuario"):
+        ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"), CLIENT_ID)
+        submit_button = st.form_submit_button("Guardar")
+    #with col_reset:
+    if st.button("🔄 Reset", key="reset_guardar"):
+        st.session_state.clear()
 
 
     if submit_button:
