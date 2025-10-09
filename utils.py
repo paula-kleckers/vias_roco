@@ -41,6 +41,7 @@ def limpiar_campos():
     st.session_state.tipo_via = ""
     st.session_state.dificultad_percibida = ""
     st.session_state.nombre_via = ""
+    st.session_state.ultimo_rocodromo = ""  # Añadido para forzar regeneración del nombre
     st.session_state.comentarios_personales = ""
     st.session_state.comentarios_tipo_ascension = ""
 
