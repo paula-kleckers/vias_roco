@@ -26,47 +26,45 @@ supabase: Client = create_client(url, key)
 #             "comentarios_personales", "comentarios_tipo_ascension", "nombre_via", "ruta_imagen"
 #         ])
 
+def limpiar_campos():
+    """Función para limpiar todos los campos con valores por defecto"""
+    st.session_state.nombre_escalador = ""
+    st.session_state.escalada_con_existente = []
+    st.session_state.companeros = []
+    st.session_state.fecha = date.today()
+    rocodromos = list(opciones.keys())
+    st.session_state.rocodromo = rocodromos[0] if rocodromos else ""
+    st.session_state.tipo_ascension = ""
+    st.session_state.intentos = 0
+    st.session_state.valoracion = ""
+    st.session_state.dificultad_oficial = ""
+    st.session_state.tipo_via = ""
+    st.session_state.dificultad_percibida = ""
+    st.session_state.nombre_via = ""
+    st.session_state.comentarios_personales = ""
+    st.session_state.comentarios_tipo_ascension = ""
+
 def cargar_valores_indice(df, indice):
     # Si el índice es válido y ha cambiado, actualizamos session_state
     if "indice_actual" not in st.session_state or st.session_state.indice_actual != indice:
         st.session_state.indice_actual = indice
+        
         if 0 <= indice < len(df):
+            # Es una fila existente, cargamos todos los valores
             fila = df.iloc[indice]
-            # Escalador
             st.session_state.nombre_escalador = fila.get("escalador", "")
-            # Escalada con
             st.session_state.escalada_con_existente = cargar_escalada_con_desde_fila(fila)
-            st.session_state.companeros = []  # Los nuevos no están en la base
-            # Fecha
             st.session_state.fecha = cargar_fecha_desde_fila(fila)
-            # Rocódromo
             st.session_state.rocodromo = cargar_rocodromo_desde_fila(fila, opciones)
-            # Tipo de ascensión
+            st.session_state.tipo_via = fila.get("tipo_via", "")
+            st.session_state.dificultad_oficial = fila.get("dificultad_oficial", "")
             st.session_state.tipo_ascension = cargar_tipo_ascension_desde_fila(fila)
-            # Intentos
             st.session_state.intentos = cargar_intentos_desde_fila(fila)
-            # Valoración de la vía
+            st.session_state.dificultad_percibida = fila.get("dificultad_percibida", "")
             st.session_state.valoracion = cargar_valoracion_desde_fila(fila)
-
-            #TODO: Cargar los demás campos de la fila
-
-        else:
-            # índice no válido → limpiar campos
-            st.session_state.nombre_escalador = ""
-            st.session_state.escalada_con_existente = []
-            st.session_state.companeros = []
-            st.session_state.fecha = date.today()
-            # Rocódromo
-            rocodromos = list(opciones.keys())
-            st.session_state.rocodromo = rocodromos[0] if rocodromos else ""
-            # Tipo de ascensión
-            st.session_state.tipo_ascension = ""
-            st.session_state.intentos = 0
-            st.session_state.valoracion = ""
-
-            # ... limpiar los demás campos
-
-            # TODO: Limpiar los demás campos de la fila
+            st.session_state.nombre_via = fila.get("nombre_via", "")
+            st.session_state.comentarios_personales = fila.get("comentarios_personales", "")
+            st.session_state.comentarios_tipo_ascension = fila.get("comentarios_tipo_ascension", "")
 
 
 def cargar_escalada_con_desde_fila(fila):

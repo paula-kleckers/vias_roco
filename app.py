@@ -56,9 +56,16 @@ df = load_data()
 
 # ---------- FORMULARIO ----------
 with st.sidebar:
-    st.header("Índice de fila para el registro")
-    st.text("Si el índice corresponde con una fila existente, esta fila se actualizará con la nueva información")
-    indice = input_indice(df)
+    col1, col2 = st.columns([3,1])
+    with col1:
+        st.header("Índice de fila para el registro")
+        st.text("Si el índice corresponde con una fila existente, esta fila se actualizará")
+        indice = input_indice(df)
+    with col2:
+        st.markdown("<br><br>", unsafe_allow_html=True)  # Espaciado
+        if st.button("🆕 Nueva entrada"):
+            u.limpiar_campos()
+            st.rerun()
     st.markdown("---")
 
     # 📌 Aquí llamas a la función para precargar valores
