@@ -28,7 +28,18 @@ import utils as u
 # ---------- CONFIGURACIÓN INICIAL ----------
 st.set_page_config(page_title="Roco Climber", layout="wide")
 
-#DATA_FILE = "data.csv"
+def load_data():
+    """Función para cargar datos desde Supabase"""
+    try:
+        response = supabase.table("climbing_data").select("*").order("fecha").execute()
+        return pd.DataFrame(response.data)
+    except Exception as e:
+        st.error(f"Error al cargar los datos desde Supabase: {str(e)}")
+        return pd.DataFrame(columns=[
+            "escalador", "escalada_con", "fecha", "rocodromo", "tipo_via", "dificultad_oficial",
+            "tipo_ascension", "intentos", "dificultad_percibida", "valoracion",
+            "comentarios_personales", "comentarios_tipo_ascension", "nombre_via", "ruta_imagen"
+        ])
 
 # Tus credenciales de Supabase
 url = "https://ubnslrintcfolygbnqsb.supabase.co"
@@ -39,30 +50,14 @@ supabase: Client = create_client(url, key)
 with open("client_id/client_id.txt", "r") as f:
     CLIENT_ID = f.read().strip()
 
-# Cargar datos si existen
-try:
-    response = supabase.table("climbing_data").select("*").order("fecha").execute()
-    df = pd.DataFrame(response.data)
-except Exception as e:
-    st.error("Error al cargar los datos desde Supabase")
-    df = pd.DataFrame(columns=[
-        "escalador", "escalada_con", "fecha", "rocodromo", "tipo_via", "dificultad_oficial",
-        "tipo_ascension", "intentos", "dificultad_percibida", "valoracion",
-        "comentarios_personales", "comentarios_tipo_ascension", "nombre_via", "ruta_imagen"
-    ])
+# Cargar datos
+df = load_data()
 
 
 # ---------- FORMULARIO ----------
 with st.sidebar:
-
-    st.text(" Resetea el formulario para recargar los datos y evitar sobrescribirlos.")
-    # Botón para reiniciar el formulario
-    if st.button("🔄 Resetear formulario", key="reset_formulario"):
-        st.session_state.clear()
-
     st.header("Índice de fila para el registro")
-    st.text("Si el índice corresponde con una fila existente, esta fila se actualizará y, al resetear el formulario, "
-            "la anterior recuperará la información anterior y se añadirá una nueva con la nueva información")
+    st.text("Si el índice corresponde con una fila existente, esta fila se actualizará con la nueva información")
     indice = input_indice(df)
     st.markdown("---")
 
@@ -90,16 +85,9 @@ with st.sidebar:
     st.markdown("---")
 
 
-    #col_guardar, col_reset = st.columns([3, 1])
-    #with col_guardar:
-    # Se genera el formulario para poder utilizar el botón de guardado
     with st.form(key="formulario_usuario"):
         ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"), CLIENT_ID)
         submit_button = st.form_submit_button("Guardar")
-    #with col_reset:
-    if st.button("🔄 Reset", key="reset_guardar"):
-        st.session_state.clear()
-
 
     if submit_button:
         nuevo_registro = {
@@ -119,36 +107,31 @@ with st.sidebar:
             "ruta_imagen": ruta_foto
         }
 
-        if len(df) > 0 and indice < len(df):
-            df.loc[indice] = nuevo_registro
-        else:
-            df = pd.concat([df, pd.DataFrame([nuevo_registro])], ignore_index=True)
-
-        supabase.table("climbing_data").upsert(nuevo_registro).execute()
-
-        if "registro_seleccionado" in st.session_state:
-            del st.session_state["registro_seleccionado"]
-        st.success("Registro guardado correctamente")
+        try:
+            supabase.table("climbing_data").upsert(nuevo_registro).execute()
+            st.success("Registro guardado correctamente")
+            st.rerun()
+        except Exception as e:
+            st.error(f"Error al guardar el registro: {str(e)}")
 
     st.markdown("---")
     st.subheader("🗑️ Eliminar registro")
 
     if not df.empty:
-        fila_a_borrar = st.number_input("Selecciona el número de fila a borrar", min_value=0, max_value=len(df) - 1,
-                                        value=len(df)-1, step=1)
+        fila_a_borrar = st.number_input("Selecciona el número de fila a borrar", 
+                                       min_value=0, 
+                                       max_value=len(df) - 1,
+                                       value=len(df)-1, 
+                                       step=1)
 
-        col_borrar, col_reset = st.columns([2, 1])
-
-        with col_borrar:
-            if st.button("Borrar fila"):
+        if st.button("Borrar fila"):
+            try:
                 id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
                 supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
-                st.warning("Recuerda resetear el formulario para evitar sobrescribir datos.")
                 st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
-        with col_reset:
-            if st.button("🔄 Reset", key="reset_borrar"):
-                st.session_state.clear()
-
+                st.rerun()
+            except Exception as e:
+                st.error(f"Error al eliminar el registro: {str(e)}")
     else:
         st.info("No hay datos para eliminar.")
 
