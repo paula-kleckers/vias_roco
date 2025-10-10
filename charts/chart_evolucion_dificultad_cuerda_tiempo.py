@@ -41,19 +41,26 @@ def evolucion_dificultad_cuerda_escalada_tiempo(df):
     # Aplicar conversión condicional
     df_filtrado["grado_fontainebleau"] = df_filtrado["dificultad_oficial"].apply(clas_dif.convertir_si_vscale)
 
-    # Agrupación temporal
-    freq = opciones_agrupado[agrupado_sel]
-    df_filtrado["fecha_agrupada"] = df_filtrado["fecha"].dt.to_period(freq).dt.to_timestamp()
+    # Filtrar solo vías completadas
+    vias_completadas = ["👀 A vista", "⚡ Flash", "✅ Completada"]
+    df_filtrado = df_filtrado[df_filtrado["tipo_ascension"].isin(vias_completadas)]
 
+    # Formatear y agrupar según la selección
     if agrupado_sel == "Día":
-        df_filtrado["fecha_formateada"] = df_filtrado["fecha_agrupada"].dt.strftime("%d-%m-%Y")
+        df_filtrado["fecha_agrupada"] = df_filtrado["fecha"]
+        df_filtrado["fecha_formateada"] = df_filtrado["fecha"].dt.strftime("%d-%m-%Y")
     elif agrupado_sel == "Mes":
-        df_filtrado["fecha_formateada"] = df_filtrado["fecha_agrupada"].dt.strftime("%m-%Y")
-    elif agrupado_sel == "Año":
-        df_filtrado["fecha_formateada"] = df_filtrado["fecha_agrupada"].dt.strftime("%Y")
-
-    agrupado = df_filtrado.groupby(["fecha_agrupada", "fecha_formateada", "grado_fontainebleau"]).size().reset_index(
-        name="conteo")
+        df_filtrado["fecha_agrupada"] = df_filtrado["fecha"].dt.to_period('M').dt.to_timestamp()
+        df_filtrado["fecha_formateada"] = df_filtrado["fecha"].dt.strftime("%m-%Y")
+    else:  # Año
+        df_filtrado["fecha_agrupada"] = df_filtrado["fecha"].dt.to_period('Y').dt.to_timestamp()
+        df_filtrado["fecha_formateada"] = df_filtrado["fecha"].dt.strftime("%Y")
+    
+    # Agrupar por fecha y dificultad
+    agrupado = df_filtrado.groupby(["fecha_agrupada", "fecha_formateada", "grado_fontainebleau"]).size().reset_index(name="conteo")
+    
+    # Ordenar cronológicamente
+    agrupado = agrupado.sort_values("fecha_agrupada")
 
     fig = px.bar(
         agrupado,
@@ -73,7 +80,13 @@ def evolucion_dificultad_cuerda_escalada_tiempo(df):
         xaxis_title="Fecha",
         yaxis_title="Número de vías",
         legend_title="Dificultad",
-        yaxis=dict(rangemode="nonnegative", fixedrange=False)
+        yaxis=dict(rangemode="nonnegative", fixedrange=False),
+        xaxis=dict(
+            type="category",
+            categoryorder="array",
+            categoryarray=agrupado["fecha_formateada"].unique(),
+            tickangle=45
+        )
     )
 
     st.plotly_chart(fig, use_container_width=True)

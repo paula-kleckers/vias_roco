@@ -4,7 +4,7 @@ opciones = {
     "One Move": {
         "": [""],
         "Boulder": ["", "🩵 Turquesa", "🟩 Verde", "🟨 Amarilla", "⬜ Blanca", "🟦 Azul", "🟥 Roja", "⬛ Negra"],
-        "Cuerda": ["", "🟩 Verde", "🟨 Amarilla", "🟥 Roja", "⬛ Negra"],
+        "Cuerda": ["", "🟩 Verde", "🟨 Amarilla", "🟦 Azul", "🟥 Roja"],
         "Stokt": ["", "4a", "4b", "4c", "5a", "5b", "5c", "6a", "6a+", "6b", "6b+", "6c", "6c+", "7a", "7a+", "7b",
                   "7b+", "7c", "7c+", "8a", "8a+", "8b", "8b+", "8c", "8c+"],
         "Kilter": ["", "4a", "4b", "4c", "5a", "5b", "5c", "6a", "6a+", "6b", "6b+", "6c", "6c+", "7a", "7a+", "7b",
@@ -60,6 +60,14 @@ dificultad_eq_color_estandar = {
         "🟦 Azul": dificultad_estandar_boulder[4],
         "🟥 Roja": dificultad_estandar_boulder[5],
         "⬛ Negra": dificultad_estandar_boulder[6],
+    },
+    "El RoKo": {
+        "🟩 Verde": dificultad_estandar_boulder[0],   # Verde -> Blanca
+        "🟨 Amarilla": dificultad_estandar_boulder[1], # Amarilla -> Amarilla
+        "🟧 Naranja": dificultad_estandar_boulder[3],  # Naranja -> Verde
+        "🌸 Rosa": dificultad_estandar_boulder[4],     # Rosa -> Azul
+        "🟪 Morada": dificultad_estandar_boulder[5],   # Morada -> Roja
+        "⬛ Negra": dificultad_estandar_boulder[6],    # Negra -> Negra
     },
 }
 
@@ -125,7 +133,7 @@ def obtener_color_estandar(row):
     dificultad_oficial = row.get("dificultad_oficial", "").strip()
 
     # NOTA: Depende del rocódromo!!!!
-    if rocodromo in ["Climbat", "One Move"]:
+    if rocodromo in ["Climbat", "One Move", "El RoKo"]:
         return convertir_color_rocodromo_a_estandar(rocodromo, dificultad_oficial)
     elif rocodromo == "Adamanta Gonzalitos":
         return convertir_vscale_a_color_estandar(dificultad_oficial)

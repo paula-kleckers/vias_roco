@@ -4,9 +4,7 @@ import pandas as pd
 
 import campos.seleccion_roco_tipo_dif as clas_dif
 
-
 def evolucion_dificultad_boulder_escalada_tiempo(df):
-
     if df.empty:
         st.info("No hay datos para mostrar.")
         return
@@ -46,23 +44,21 @@ def evolucion_dificultad_boulder_escalada_tiempo(df):
 
     df_filtrado["dificultad_color_estandar"] = df_filtrado.apply(clas_dif.obtener_color_estandar, axis=1)
 
-    # Agrupación por período
-    freq = opciones_agrupado[agrupado_sel]
-    df_filtrado["fecha_agrupada"] = df_filtrado["fecha"].dt.to_period(freq).dt.to_timestamp()
-
-    # Formateo personalizado de la fecha para mostrarla como texto limpio
+    # Formatear y agrupar según la selección
     if agrupado_sel == "Día":
-        df_filtrado["fecha_formateada"] = df_filtrado["fecha_agrupada"].dt.strftime("%d-%m-%Y")
+        df_filtrado["fecha_agrupada"] = df_filtrado["fecha"]
+        df_filtrado["fecha_formateada"] = df_filtrado["fecha"].dt.strftime("%d-%m-%Y")
     elif agrupado_sel == "Mes":
-        df_filtrado["fecha_formateada"] = df_filtrado["fecha_agrupada"].dt.strftime("%m-%Y")
-    elif agrupado_sel == "Año":
-        df_filtrado["fecha_formateada"] = df_filtrado["fecha_agrupada"].dt.strftime("%Y")
-
+        df_filtrado["fecha_agrupada"] = df_filtrado["fecha"].dt.to_period('M').dt.to_timestamp()
+        df_filtrado["fecha_formateada"] = df_filtrado["fecha"].dt.strftime("%m-%Y")
+    else:  # Año
+        df_filtrado["fecha_agrupada"] = df_filtrado["fecha"].dt.to_period('Y').dt.to_timestamp()
+        df_filtrado["fecha_formateada"] = df_filtrado["fecha"].dt.strftime("%Y")
+    
     # Agrupar por fecha y dificultad estándar
-    agrupado = df_filtrado.groupby(["fecha_agrupada", "fecha_formateada", "dificultad_color_estandar"]
-                                   ).size().reset_index(name="conteo")
-
-    # Orden cronológico
+    agrupado = df_filtrado.groupby(["fecha_agrupada", "fecha_formateada", "dificultad_color_estandar"]).size().reset_index(name="conteo")
+    
+    # Ordenar cronológicamente
     agrupado = agrupado.sort_values("fecha_agrupada")
 
     # Gráfico
@@ -99,10 +95,14 @@ def evolucion_dificultad_boulder_escalada_tiempo(df):
         yaxis=dict(
             rangemode="nonnegative",
             fixedrange=False
+        ),
+        xaxis=dict(
+            type="category",
+            categoryorder="array",
+            categoryarray=agrupado["fecha_formateada"].unique(),
+            tickangle=45
         )
     )
-
-    fig.update_xaxes(tickmode="linear", tickformat=".0f")
 
     st.plotly_chart(fig, use_container_width=True)
 
