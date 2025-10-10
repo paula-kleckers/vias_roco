@@ -64,9 +64,18 @@ with st.sidebar:
     with col2:
         st.markdown("<br><br>", unsafe_allow_html=True)  # Espaciado
         if st.button("🆕 Nueva entrada"):
-            u.limpiar_campos()
+            # Establecer un flag para indicar que queremos una nueva entrada
+            st.session_state.nueva_entrada = True
             st.rerun()
     st.markdown("---")
+
+    # Procesar el flag de nueva entrada antes de crear cualquier widget
+    if "nueva_entrada" in st.session_state and st.session_state.nueva_entrada:
+        u.limpiar_campos()
+        st.session_state.indice_registro = len(df)
+        if "indice_actual" in st.session_state:
+            del st.session_state.indice_actual
+        del st.session_state.nueva_entrada
 
     # 📌 Aquí llamas a la función para precargar valores
     u.cargar_valores_indice(df, indice)
@@ -115,7 +124,16 @@ with st.sidebar:
         }
 
         try:
-            supabase.table("climbing_data").upsert(nuevo_registro).execute()
+            # Si estamos editando una fila existente
+            if 0 <= indice < len(df):
+                # Obtener el ID de la fila a editar
+                id_a_editar = df.iloc[indice]["supabase_id"]
+                # Actualizar el registro existente
+                supabase.table("climbing_data").update(nuevo_registro).eq("supabase_id", id_a_editar).execute()
+            else:
+                # Si es una nueva fila, insertar nuevo registro
+                supabase.table("climbing_data").insert(nuevo_registro).execute()
+            
             st.success("Registro guardado correctamente")
             st.rerun()
         except Exception as e:
@@ -128,14 +146,15 @@ with st.sidebar:
         fila_a_borrar = st.number_input("Selecciona el número de fila a borrar", 
                                        min_value=0, 
                                        max_value=len(df) - 1,
-                                       value=len(df)-1, 
+                                       value=len(df) - 1,  # Por defecto, la última fila
                                        step=1)
 
-        if st.button("Borrar fila"):
+        if st.button("Borrar fila", key="boton_borrar"):
             try:
                 id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
                 supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
                 st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
+                # Recargar la página sin intentar modificar el session_state
                 st.rerun()
             except Exception as e:
                 st.error(f"Error al eliminar el registro: {str(e)}")
