@@ -143,35 +143,42 @@ def obtener_color_estandar(row):
 
 # -------------------------------------------------------------------------------------------------------------------
 
-# Equivalencias de dificultad oficial en base a la clasificación de la app de Kilter Board
-dificultad_eq_vscale_font = {"V0": ["4a", "4b", "4c"],
-                             "V1": ["5a", "5b"],
-                             "V2": ["5c"],
-                             "V3": ["6a"],
-                             "V3+": ["6a+"],
-                             "V4": ["6b"],
-                             "V4+": ["6b+"],
-                             "V5": ["6c"],
-                             "V5+": ["6c+"],
-                             "V6": ["7a"],
-                             "V6+": ["7a+"],
-                             "V7": ["7b"],
-                             "V7+": ["7b+"],
-                             "V8": ["7c"],
-                             "V8+": ["7c+"],
-                             "V9": ["8a"],
-                             "V9+": ["8a+"],
-                             }
+# Equivalencias de dificultad oficial en base a la clasificación general aceptada
+dificultad_eq_vscale_font = {
+    "V0": ["4", "4+"],        # 4a - 4c
+    "V1": ["5", "5+"],        # 5a - 5b
+    "V2": ["6a"],             # 5c - 6a
+    "V3": ["6a+"],            # 6a+
+    "V3+": ["6b"],            # 6b
+    "V4": ["6b+"],            # 6b+
+    "V4+": ["6c"],            # 6c
+    "V5": ["6c+"],            # 6c+
+    "V5+": ["7a"],            # 7a
+    "V6": ["7a+"],            # 7a+
+    "V6+": ["7b"],            # 7b
+    "V7": ["7b+"],            # 7b+
+    "V7+": ["7c"],            # 7c
+    "V8": ["7c+"],            # 7c+
+    "V8+": ["8a"],            # 8a
+    "V9": ["8a+"],            # 8a+
+    "V9+": ["8b"]             # 8b
+}
 
 # FUNCIONES DE EQUIVALENCIA PARA VISUALIZACIONES (CUERDA)
 
 def vscale_to_font_custom_vscale(vscale_grade: str) -> str:
+    """
+    Convierte un grado de V-scale al grado Fontainebleau correspondiente.
+    Utiliza el primer grado equivalente del diccionario dificultad_eq_vscale_font.
+    
+    Args:
+        vscale_grade (str): Grado en V-scale (ej: "V0", "V1", etc.)
+        
+    Returns:
+        str: Grado equivalente en escala Fontainebleau o "?" si no se encuentra equivalencia
+    """
     vscale_grade = vscale_grade.strip().upper()
-    if vscale_grade == "V0":
-        return "4b"
-    elif vscale_grade == "V1":
-        return "5b"
-    elif vscale_grade in dificultad_eq_vscale_font:
+    if vscale_grade in dificultad_eq_vscale_font:
         return dificultad_eq_vscale_font[vscale_grade][0]
     else:
         return "?"  # Valor desconocido
