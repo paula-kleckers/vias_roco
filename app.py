@@ -63,10 +63,44 @@ with st.sidebar:
         indice = input_indice(df)
     with col2:
         st.markdown("<br><br>", unsafe_allow_html=True)  # Espaciado
+        st.markdown("<small>", unsafe_allow_html=True)
         if st.button("🆕 Nueva entrada"):
             # Establecer un flag para indicar que queremos una nueva entrada
             st.session_state.nueva_entrada = True
             st.rerun()
+        st.markdown("</small>", unsafe_allow_html=True)
+    
+    # Añadir sección de gestión de registros en un expander
+    with st.expander("🗑️ Borrado de registros"):
+        if not df.empty:
+            st.caption("Borrar un registro existente:")
+            # Asegurarnos de que el valor por defecto no exceda el máximo
+            valor_por_defecto = min(st.session_state.get("fila_a_borrar", len(df) - 1), len(df) - 1)
+            
+            fila_a_borrar = st.number_input(
+                "Selecciona el número de fila a borrar",
+                min_value=0,
+                max_value=len(df) - 1,
+                value=valor_por_defecto,
+                key="fila_a_borrar",
+                step=1
+            )
+            
+            col_borrar1, col_borrar2 = st.columns([3,1])
+            with col_borrar2:
+                if st.button("🗑️ Borrar", key="boton_borrar"):
+                    try:
+                        id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
+                        supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
+                        st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"Error al eliminar el registro: {str(e)}")
+            with col_borrar1:
+                st.warning("⚠️ Esta acción no se puede deshacer")
+        else:
+            st.info("No hay datos para eliminar.")
+    
     st.markdown("---")
 
     # Procesar el flag de nueva entrada antes de crear cualquier widget
@@ -83,7 +117,8 @@ with st.sidebar:
     # Se agregan registros fuera de un formulario para garantizar que son dinámicos
     st.header("Agregar registro")
     escalador = input_escalador(df)
-    escalada_con = input_escalada_con(df, escalador)
+    with st.expander("👥 Compañeros de escalada", expanded=False):
+        escalada_con = input_escalada_con(df, escalador)
     st.markdown("---")
     fecha = input_fecha()
     rocodromo = input_rocodromo()
@@ -93,17 +128,16 @@ with st.sidebar:
     intentos = input_intentos(tipo_ascension)
     dificultad_percibida = input_dificultad_percibida(dificultad_oficial, opciones_dificultad)
     valoracion = input_valoracion()
-    st.markdown("---")
-    comentarios_personales = input_comentarios_personales()
-    comentarios_tipo_ascension = input_comentarios_tipo_ascension()
-    st.markdown("---")
-    nombre_via = input_nombre_via(df, rocodromo)
-    st.markdown("---")
-
-
+    with st.expander("📝 Comentarios y nombre de la vía", expanded=False):
+        nombre_via = input_nombre_via(df, rocodromo)
+        st.markdown("---")
+        comentarios_personales = input_comentarios_personales()
+        st.markdown("---")
+        comentarios_tipo_ascension = input_comentarios_tipo_ascension()
     with st.form(key="formulario_usuario"):
-        ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"), CLIENT_ID)
-        submit_button = st.form_submit_button("Guardar")
+        with st.expander("📸 Añadir foto", expanded=False):
+            ruta_foto = input_foto(escalador, fecha.strftime("%Y-%m-%d"), CLIENT_ID)
+        submit_button = st.form_submit_button("💾 Guardar")
 
     if submit_button:
         nuevo_registro = {
@@ -139,27 +173,27 @@ with st.sidebar:
         except Exception as e:
             st.error(f"Error al guardar el registro: {str(e)}")
 
-    st.markdown("---")
-    st.subheader("🗑️ Eliminar registro")
-
-    if not df.empty:
-        fila_a_borrar = st.number_input("Selecciona el número de fila a borrar", 
-                                       min_value=0, 
-                                       max_value=len(df) - 1,
-                                       value=len(df) - 1,  # Por defecto, la última fila
-                                       step=1)
-
-        if st.button("Borrar fila", key="boton_borrar"):
-            try:
-                id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
-                supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
-                st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
-                # Recargar la página sin intentar modificar el session_state
-                st.rerun()
-            except Exception as e:
-                st.error(f"Error al eliminar el registro: {str(e)}")
-    else:
-        st.info("No hay datos para eliminar.")
+    # st.markdown("---")
+    # st.subheader("🗑️ Eliminar registro")
+    #
+    # if not df.empty:
+    #     fila_a_borrar = st.number_input("Selecciona el número de fila a borrar",
+    #                                    min_value=0,
+    #                                    max_value=len(df) - 1,
+    #                                    value=len(df) - 1,  # Por defecto, la última fila
+    #                                    step=1)
+    #
+    #     if st.button("Borrar fila", key="boton_borrar"):
+    #         try:
+    #             id_a_borrar = df.iloc[fila_a_borrar]["supabase_id"]
+    #             supabase.table("climbing_data").delete().eq("supabase_id", id_a_borrar).execute()
+    #             st.success(f"Fila {fila_a_borrar} eliminada correctamente.")
+    #             # Recargar la página sin intentar modificar el session_state
+    #             st.rerun()
+    #         except Exception as e:
+    #             st.error(f"Error al eliminar el registro: {str(e)}")
+    # else:
+    #     st.info("No hay datos para eliminar.")
 
 # ---------- PESTAÑAS ----------
 tab1, tab2, tab3 = st.tabs(["📋 Tabla de datos", "📈 Evolución grado (Boulder)", "📈 Evolución grado (Cuerda)"])

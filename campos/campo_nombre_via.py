@@ -1,8 +1,7 @@
 import streamlit as st
 
 def input_nombre_via(df, rocodromo_seleccionado):
-    st.header("Nombre de la vía")
-
+    
     # Si no existe el nombre_via en session_state o se ha cambiado el rocódromo
     if ("nombre_via" not in st.session_state or 
         st.session_state.get("ultimo_rocodromo", "") != rocodromo_seleccionado):
